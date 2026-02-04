@@ -1,5 +1,4 @@
 {
-  "$schema": "./settings.schema.json",
   "framework": {
     "name": "claude-code-project-start-pack",
     "version": "2.0.0",
