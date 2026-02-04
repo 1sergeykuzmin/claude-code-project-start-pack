@@ -13,6 +13,57 @@ A comprehensive framework for AI-assisted development with Claude Code. This sta
 - **TypeScript Dialog Exporter** - Web UI for browsing conversations
 - **Enhanced Security** - 6-layer protection against credential leaks
 - **Silent Mode** - Minimal output for CI/CD integration
+- **One-Line Installer** - Install framework into any existing project
+
+## Installation
+
+### New Project
+
+Clone this repository as your project base:
+
+```bash
+git clone https://github.com/1sergeykuzmin/claude-code-project-start-pack.git my-project
+cd my-project
+rm -rf .git && git init
+```
+
+### Existing Project
+
+Install the framework into any existing project with one command:
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/1sergeykuzmin/claude-code-project-start-pack/main/install.sh | bash
+```
+
+Or download and run with options:
+
+```bash
+# Download installer
+curl -fsSL https://raw.githubusercontent.com/1sergeykuzmin/claude-code-project-start-pack/main/install.sh -o install.sh
+chmod +x install.sh
+
+# Preview what will be installed
+./install.sh --dry-run
+
+# Full installation
+./install.sh
+
+# Minimal installation (only .claude/ directory)
+./install.sh --minimal
+
+# Update existing installation
+./install.sh --update
+```
+
+### Installer Options
+
+| Option | Description |
+|--------|-------------|
+| `--minimal` | Only install `.claude/` directory (no `src/`, `security/`) |
+| `--force` | Overwrite existing files without prompts |
+| `--no-hooks` | Skip git hooks installation |
+| `--update` | Update mode - refresh framework, preserve customizations |
+| `--dry-run` | Show what would be done without doing it |
 
 ## Overview
 

@@ -5,6 +5,21 @@ All notable changes to the Claude Code Project Framework will be documented in t
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.0.1] - 2026-02-05
+
+### Added
+
+#### Installer Script
+- **One-line installation** for existing projects: `curl -fsSL .../install.sh | bash`
+- Installation options: `--minimal`, `--force`, `--no-hooks`, `--update`, `--dry-run`
+- Intelligent CLAUDE.md merging (preserves existing project-specific content)
+- Automatic .gitignore updates with framework patterns
+- Backup creation before overwriting existing installations
+- Update mode to refresh framework while preserving customizations
+
+### Fixed
+- Removed `$schema` from settings.json (caused Claude Code validation errors)
+
 ## [2.0.0] - 2026-02-04
 
 ### Added
