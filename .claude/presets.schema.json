@@ -1,0 +1,182 @@
+{
+  "$schema": "https://json-schema.org/draft-07/schema#",
+  "$id": "https://claude-code-project.dev/schemas/presets.schema.json",
+  "title": "Claude Code Project Presets Schema",
+  "description": "Schema for validating preset configurations",
+  "type": "object",
+  "required": ["version", "presets"],
+  "properties": {
+    "$schema": {
+      "type": "string",
+      "description": "Reference to this schema file"
+    },
+    "version": {
+      "type": "string",
+      "pattern": "^\\d+\\.\\d+\\.\\d+$",
+      "description": "Schema version (semver)"
+    },
+    "description": {
+      "type": "string",
+      "description": "Human-readable description of this file"
+    },
+    "presets": {
+      "type": "object",
+      "description": "Preset definitions",
+      "additionalProperties": {
+        "$ref": "#/definitions/preset"
+      },
+      "propertyNames": {
+        "enum": ["paranoid", "balanced", "autopilot", "verbose", "silent"]
+      }
+    },
+    "behavior_definitions": {
+      "type": "object",
+      "description": "Definitions explaining behavior option values",
+      "additionalProperties": {
+        "type": "object",
+        "additionalProperties": {
+          "type": "string"
+        }
+      }
+    },
+    "invariants": {
+      "type": "object",
+      "description": "Settings that cannot be overridden by presets",
+      "additionalProperties": {
+        "$ref": "#/definitions/invariant"
+      }
+    }
+  },
+  "definitions": {
+    "preset": {
+      "type": "object",
+      "required": ["name", "description", "settings", "behaviors"],
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "Display name for the preset"
+        },
+        "description": {
+          "type": "string",
+          "description": "Human-readable description"
+        },
+        "recommended_for": {
+          "type": "string",
+          "description": "Use cases this preset is recommended for"
+        },
+        "default": {
+          "type": "boolean",
+          "description": "Whether this is the default preset"
+        },
+        "settings": {
+          "$ref": "#/definitions/presetSettings"
+        },
+        "behaviors": {
+          "$ref": "#/definitions/presetBehaviors"
+        }
+      }
+    },
+    "presetSettings": {
+      "type": "object",
+      "properties": {
+        "execution.mode": {
+          "type": "string",
+          "enum": ["verbose", "optimized", "silent"]
+        },
+        "autoUpdate.confirmBeforeUpdate": {
+          "type": "boolean"
+        },
+        "protocols.coldStart.autoDetect": {
+          "type": "boolean"
+        },
+        "protocols.completion.autoCommit": {
+          "type": "boolean"
+        },
+        "protocols.completion.requireReview": {
+          "type": "boolean"
+        },
+        "protocols.autoTriggers.mode": {
+          "type": "string",
+          "enum": ["manual", "assisted", "proactive"]
+        },
+        "review.compulsory": {
+          "type": "boolean"
+        },
+        "review.showInSilentMode": {
+          "type": "string",
+          "enum": ["always", "failures_only", "never"]
+        },
+        "security.credentialScan": {
+          "type": "boolean"
+        },
+        "security.preCommitCheck": {
+          "type": "boolean"
+        },
+        "security.runSecurityScripts": {
+          "type": "boolean"
+        },
+        "git.autoPush": {
+          "type": "boolean"
+        },
+        "git.confirmPush": {
+          "type": "boolean"
+        }
+      }
+    },
+    "presetBehaviors": {
+      "type": "object",
+      "properties": {
+        "cold_start_output": {
+          "type": "string",
+          "enum": ["full", "optimized", "silent"]
+        },
+        "completion_output": {
+          "type": "string",
+          "enum": ["full", "summary", "minimal", "hash_only"]
+        },
+        "commit_confirmation": {
+          "type": "string",
+          "enum": ["always", "once", "never"]
+        },
+        "push_confirmation": {
+          "type": "string",
+          "enum": ["always", "once", "never"]
+        },
+        "pr_confirmation": {
+          "type": "string",
+          "enum": ["always", "once", "never"]
+        },
+        "auto_triggers": {
+          "type": "string",
+          "enum": ["disabled", "suggest", "execute"]
+        },
+        "auto_update": {
+          "type": "string",
+          "enum": ["confirm_always", "auto_with_notice", "auto_silent"]
+        },
+        "security_warnings": {
+          "type": "string",
+          "enum": ["show_all", "show_critical"]
+        }
+      }
+    },
+    "invariant": {
+      "type": "object",
+      "required": ["value", "reason", "override_allowed"],
+      "properties": {
+        "value": {
+          "description": "The fixed value for this setting"
+        },
+        "reason": {
+          "type": "string",
+          "description": "Why this cannot be changed"
+        },
+        "override_allowed": {
+          "type": "boolean",
+          "const": false,
+          "description": "Must always be false for invariants"
+        }
+      }
+    }
+  }
+}

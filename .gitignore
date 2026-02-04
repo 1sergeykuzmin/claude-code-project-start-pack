@@ -28,6 +28,7 @@ security/reports/*
 # Framework runtime state
 .claude/.framework-config
 .claude/.framework-log
+.claude/.last_session
 
 # Node.js
 node_modules/

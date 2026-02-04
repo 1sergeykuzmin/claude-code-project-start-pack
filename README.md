@@ -136,11 +136,22 @@ npm run framework:cold-start -- --preset autopilot
 
 | Command | Purpose |
 |---------|---------|
-| `/feature <desc>` | Plan and implement new features |
+| `/feature <desc>` | Plan feature, update PRD/TRD/to-do, auto-execute |
 | `/fix <issue>` | Debug and fix issues |
 | `/refactor [file]` | Improve code structure |
 | `/explain [file]` | Explain how code works |
 | `/optimize [file]` | Performance optimization |
+
+**Enhanced `/feature` Workflow (v2.0):**
+```
+/feature <description>
+    ├── Read PRD/TRD for context
+    ├── Ask up to 5 clarifying questions
+    ├── Update PRD with requirements
+    ├── Update TRD with tech approach + security review
+    ├── Add tasks to to-do.md
+    └── Auto-invoke /autonomous-development
+```
 
 ### Quality Commands
 

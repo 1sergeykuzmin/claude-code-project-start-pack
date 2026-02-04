@@ -110,7 +110,7 @@ Protocols are selected based on active preset:
 
 | Command | Purpose |
 |---------|---------|
-| `/feature <description>` | Plan and implement a new feature |
+| `/feature <description>` | Plan feature, update PRD/TRD/to-do, then auto-execute |
 | `/fix <issue>` | Debug and fix issues |
 | `/refactor [file]` | Improve code structure |
 | `/explain [file]` | Explain how code works |
@@ -213,6 +213,15 @@ This rule applies to ALL presets, including silent and autopilot.
 1. /migrate-legacy         → Analyzes project, creates framework files
 2. Review generated docs   → Verify accuracy
 3. /autonomous-development → Start working
+```
+
+### Adding a Feature
+```
+1. /feature <description>  → Asks clarifying questions (up to 5)
+                           → Updates PRD with requirements
+                           → Updates TRD with tech approach + security
+                           → Adds tasks to to-do.md
+                           → Auto-invokes /autonomous-development
 ```
 
 ### Daily Development Session
