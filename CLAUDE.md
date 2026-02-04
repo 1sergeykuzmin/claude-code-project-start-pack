@@ -1,4 +1,4 @@
-# Claude Code Project Framework v1.0
+# Claude Code Project Framework v1.1
 
 > AI Instruction Router - Auto-loaded by Claude Code
 
@@ -19,6 +19,7 @@ Idea → PRD → TRD → Tasks → [Session: Start → Work → Review → Commi
 | Tasks | `dev-docs/to-do.md` | Development tasks |
 | Snapshot | `dev-docs/snapshot.md` | Current project state |
 | Architecture | `dev-docs/architecture.md` | Code structure |
+| Commit Policy | `.claude/COMMIT_POLICY.md` | What can/cannot be committed |
 
 ## Protocol Routing
 
@@ -27,7 +28,7 @@ Idea → PRD → TRD → Tasks → [Session: Start → Work → Review → Commi
 | Trigger | Action |
 |---------|--------|
 | `start`, `resume`, `continue`, `begin` | → Execute Cold Start Protocol |
-| `done`, `finish`, `end session`, `stop` | → Execute Completion Protocol |
+| `done`, `finish`, `/fi`, `end session` | → Execute Completion Protocol |
 
 ### Planning Skills
 
@@ -44,19 +45,62 @@ Idea → PRD → TRD → Tasks → [Session: Start → Work → Review → Commi
 | `/autonomous-development` | Execute tasks with mandatory review |
 | `/codex-review` | Run code review (COMPULSORY after each task) |
 
-### Operational Commands
+### Code Commands
+
+| Command | Purpose |
+|---------|---------|
+| `/feature <description>` | Plan and implement a new feature |
+| `/fix <issue>` | Debug and fix issues |
+| `/refactor [file]` | Improve code structure |
+| `/explain [file]` | Explain how code works |
+| `/optimize [file]` | Optimize performance |
+
+### Quality Commands
+
+| Command | Purpose |
+|---------|---------|
+| `/review [file]` | Manual code review checklist |
+| `/security` | Run OWASP security audit |
+| `/security-dialogs` | Deep AI credential scan |
+| `/test` | Write and run tests |
+
+### Git Commands
 
 | Command | Purpose |
 |---------|---------|
 | `/commit` | Create structured git commit |
 | `/pr` | Create pull request |
-| `/fix` | Debug and fix issues |
-| `/refactor` | Improve code structure |
-| `/security` | Run security audit |
 | `/release` | Manage version releases |
-| `/test` | Write and run tests |
-| `/explain` | Explain code |
-| `/optimize` | Optimize performance |
+
+### Database Commands
+
+| Command | Purpose |
+|---------|---------|
+| `/db:migrate` | Manage database migrations |
+
+### Dialog Commands
+
+| Command | Purpose |
+|---------|---------|
+| `/ui` | Browse exported dialogs |
+| `/watch` | Auto-export dialogs in real-time |
+
+### Framework Commands
+
+| Command | Purpose |
+|---------|---------|
+| `/fi` | Finish session (trigger Completion Protocol) |
+| `/migrate-legacy` | Migrate existing project to framework |
+| `/upgrade-framework` | Update framework to latest version |
+| `/bug-reporting` | Manage error reporting settings |
+| `/analyze-bugs` | Analyze collected error logs |
+
+### Best Practices
+
+| Command | Purpose |
+|---------|---------|
+| `/vercel-react-best-practices` | React/Next.js performance patterns |
+| `/web-design-guidelines` | Accessibility and UX compliance |
 
 ## Core Rules
 
@@ -74,13 +118,21 @@ Idea → PRD → TRD → Tasks → [Session: Start → Work → Review → Commi
 ### 3. Session Management
 ```
 ✓ Run Cold Start when resuming after a break
-✓ Run Completion Protocol when ending a session
+✓ Run Completion Protocol when ending a session (/fi)
 ```
 
 ### 4. Traceability
 ```
 ✓ Tasks MUST reference PRD/TRD sections (e.g., PRD FR-001, TRD 3.2)
 ✓ Commits SHOULD reference task IDs when applicable
+```
+
+### 5. Security
+```
+✓ COMMIT_POLICY.md defines what can/cannot be committed
+✓ Pre-commit hook blocks sensitive files
+✓ Run /security before releases
+✓ Run /security-dialogs if credentials may have been exposed
 ```
 
 ## Workflow Patterns
@@ -93,13 +145,28 @@ Idea → PRD → TRD → Tasks → [Session: Start → Work → Review → Commi
 4. /autonomous-development → Executes tasks
 ```
 
+### Existing Project Onboarding
+```
+1. /migrate-legacy         → Analyzes project, creates framework files
+2. Review generated docs   → Verify accuracy
+3. /autonomous-development → Start working
+```
+
 ### Daily Development Session
 ```
-1. "start" or "resume"     → Cold Start Protocol
+1. "start" or "resume"     → Cold Start Protocol (with crash recovery)
 2. /autonomous-development → Work on tasks
 3. /codex-review           → Review changes (per task)
 4. /commit                 → Commit changes
-5. "done" or "finish"      → Completion Protocol
+5. /fi or "done"           → Completion Protocol
+```
+
+### New Feature
+```
+1. /feature <description>  → Plan implementation
+2. Implement code          → Following the plan
+3. /codex-review           → Review changes
+4. /commit                 → Commit feature
 ```
 
 ### Quick Fix
@@ -107,6 +174,14 @@ Idea → PRD → TRD → Tasks → [Session: Start → Work → Review → Commi
 1. /fix <issue>            → Debug and fix
 2. /codex-review           → Review fix
 3. /commit                 → Commit fix
+```
+
+### Security Audit
+```
+1. /security               → OWASP checklist audit
+2. /security-dialogs       → Deep credential scan
+3. Fix any findings        → Apply recommendations
+4. /codex-review           → Verify fixes
 ```
 
 ## Document Dependencies
@@ -133,35 +208,69 @@ Idea → PRD → TRD → Tasks → [Session: Start → Work → Review → Commi
               └──────────────┘
 ```
 
-## Security Guidelines
+## Security Layers
+
+```
+Layer 1: .gitignore           → Prevents tracking
+Layer 2: COMMIT_POLICY.md     → Blocks staging
+Layer 3: Pre-commit hook      → Regex pattern matching
+Layer 4: /security-dialogs    → AI deep scan
+Layer 5: /codex-review        → Code quality check
+Layer 6: /security            → OWASP audit
+```
 
 ### Never Commit
 - `.env` files or environment secrets
 - API keys or credentials
 - `node_modules/` or build artifacts
+- Dialog exports (may contain secrets)
 - Personal configuration files
 
-### Always Check
-- Run `/security` before major releases
-- Review changes with `/codex-review`
-- Validate no secrets in committed code
+## Crash Recovery
+
+If a session doesn't end cleanly (no `/fi` or "done"):
+- Next Cold Start detects via `.claude/.last_session`
+- Offers to recover uncommitted work
+- Options: commit, stash, or review changes
 
 ## Configuration
 
-Framework settings are in `.claude/settings.json`. Customize:
+Framework settings in `.claude/settings.json`:
 - Protocol behavior (cold-start, completion)
 - Review requirements
 - Security scanning options
 - Document paths
+- Dialog export settings
 
-## Best Practices Skills
+## Git Hooks
 
-The framework includes best practices for:
-- **React/Next.js**: `/vercel-react-best-practices`
-- **Web Design**: `/web-design-guidelines`
+Install security hooks:
+```bash
+.claude/scripts/install-git-hooks.sh
+```
 
-Use these when building UI components.
+Provides:
+- Pre-commit hook blocking sensitive files
+- Pattern matching from COMMIT_POLICY.md
+
+## File Structure
+
+```
+.claude/
+├── commands/
+│   ├── code/       (feature, fix, refactor, explain, optimize)
+│   ├── git/        (commit, pr, release)
+│   ├── quality/    (review, security, security-dialogs, test)
+│   ├── db/         (migrate)
+│   ├── dialog/     (ui, watch)
+│   └── framework/  (fi, migrate-legacy, upgrade-framework, bug-reporting, analyze-bugs)
+├── protocols/      (cold-start, completion, auto-triggers)
+├── scripts/        (git hooks, utilities)
+├── skills/         (prd, trd, to-do, autonomous-dev, codex-review, best-practices)
+├── settings.json
+└── COMMIT_POLICY.md
+```
 
 ---
 
-*Framework: claude-code-project-start-pack v1.0*
+*Framework: claude-code-project-start-pack v1.1*

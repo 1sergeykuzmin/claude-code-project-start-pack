@@ -10,9 +10,10 @@ Idea → PRD → TRD → Tasks → [Session: Start → Work → Review → Commi
 
 This framework combines:
 - **Strategic Planning Skills** - Generate requirements, specifications, and task breakdowns
-- **Session Management** - Efficiently resume work between sessions with minimal context loading
+- **Session Management** - Efficiently resume work with crash recovery
 - **Autonomous Development** - Execute tasks with mandatory code review
 - **Operational Commands** - Git workflows, debugging, refactoring, security audits
+- **Security Layers** - 6-layer protection against credential leaks
 
 ## Quick Start
 
@@ -31,20 +32,30 @@ This framework combines:
 /autonomous-development
 ```
 
-### 2. Daily Development Session
+### 2. Existing Project Onboarding
 ```bash
-# Resume work (loads context efficiently)
+# Migrate existing project to framework
+/migrate-legacy
+
+# Review generated documentation
+# Then start development
+/autonomous-development
+```
+
+### 3. Daily Development Session
+```bash
+# Resume work (loads context, checks for crashes)
 "start" or "resume"
 
 # Work on tasks
 /autonomous-development
 
-# Or use operational commands
-/fix "bug in authentication"
-/refactor src/components/UserProfile.tsx
+# Or use specific commands
+/feature "Add user authentication"
+/fix "Login redirect issue"
 
 # End session (saves state)
-"done" or "finish"
+/fi or "done"
 ```
 
 ## Features
@@ -61,8 +72,8 @@ This framework combines:
 
 | Protocol | Trigger | Purpose |
 |----------|---------|---------|
-| Cold Start | "start", "resume" | Load minimal context (~3k tokens) |
-| Completion | "done", "finish" | Save state, update snapshot |
+| Cold Start | "start", "resume" | Load context, crash recovery |
+| Completion | "done", `/fi` | Save state, update snapshot |
 | Auto-triggers | Automatic | Detect session boundaries |
 
 ### Execution Skills
@@ -72,14 +83,55 @@ This framework combines:
 | Autonomous Dev | `/autonomous-development` | Execute tasks sequentially |
 | Code Review | `/codex-review` | Validate changes (mandatory) |
 
-### Operational Commands
+### Code Commands
 
-| Category | Commands | Purpose |
-|----------|----------|---------|
-| Git | `/commit`, `/pr`, `/release` | Version control workflows |
-| Code | `/fix`, `/refactor`, `/explain`, `/optimize` | Code improvements |
-| Quality | `/security`, `/test` | Security audits, testing |
-| Database | `/db:migrate` | Schema migrations |
+| Command | Purpose |
+|---------|---------|
+| `/feature <desc>` | Plan and implement new features |
+| `/fix <issue>` | Debug and fix issues |
+| `/refactor [file]` | Improve code structure |
+| `/explain [file]` | Explain how code works |
+| `/optimize [file]` | Performance optimization |
+
+### Quality Commands
+
+| Command | Purpose |
+|---------|---------|
+| `/review [file]` | Manual code review checklist |
+| `/security` | OWASP security audit |
+| `/security-dialogs` | AI credential deep scan |
+| `/test` | Write and run tests |
+
+### Git Commands
+
+| Command | Purpose |
+|---------|---------|
+| `/commit` | Structured git commits |
+| `/pr` | Create pull requests |
+| `/release` | Version management |
+
+### Database Commands
+
+| Command | Purpose |
+|---------|---------|
+| `/db:migrate` | Schema migrations |
+
+### Dialog Commands
+
+| Command | Purpose |
+|---------|---------|
+| `/ui` | Browse exported dialogs |
+| `/watch` | Auto-export in real-time |
+
+### Framework Commands
+
+| Command | Purpose |
+|---------|---------|
+| `/fi` | Finish session |
+| `/migrate-legacy` | Onboard existing projects |
+| `/upgrade-framework` | Update to latest version |
+| `/bug-reporting` | Manage error reporting |
+| `/analyze-bugs` | Analyze error patterns |
 
 ### Best Practices
 
@@ -93,27 +145,34 @@ This framework combines:
 ```
 project-root/
 ├── .claude/
+│   ├── commands/                  # Operational commands
+│   │   ├── code/                  # feature, fix, refactor, explain, optimize
+│   │   ├── git/                   # commit, pr, release
+│   │   ├── quality/               # review, security, security-dialogs, test
+│   │   ├── db/                    # migrate
+│   │   ├── dialog/                # ui, watch
+│   │   └── framework/             # fi, migrate-legacy, upgrade, bug-reporting
+│   │
+│   ├── protocols/                 # Session management
+│   │   ├── cold-start.md          # Session init + crash recovery
+│   │   ├── completion.md          # Session finalization
+│   │   └── auto-triggers.md       # Automatic detection
+│   │
+│   ├── scripts/                   # Automation
+│   │   ├── pre-commit-hook.sh     # Block sensitive files
+│   │   └── install-git-hooks.sh   # Hook installer
+│   │
 │   ├── skills/                    # Strategic skills
-│   │   ├── prd/                   # Product requirements generator
-│   │   ├── trd/                   # Technical spec generator
-│   │   ├── to-do/                 # Task breakdown generator
-│   │   ├── autonomous-development/# Task executor
-│   │   ├── codex-review/          # Code review
+│   │   ├── prd/                   # Product requirements
+│   │   ├── trd/                   # Technical specification
+│   │   ├── to-do/                 # Task breakdown
+│   │   ├── autonomous-development/
+│   │   ├── codex-review/
 │   │   ├── vercel-react-best-practices/
 │   │   └── web-design-guidelines/
 │   │
-│   ├── commands/                  # Operational commands
-│   │   ├── git/                   # commit, pr, release
-│   │   ├── code/                  # fix, refactor, explain, optimize
-│   │   ├── quality/               # security, test
-│   │   └── db/                    # migrate
-│   │
-│   ├── protocols/                 # Session management
-│   │   ├── cold-start.md
-│   │   ├── completion.md
-│   │   └── auto-triggers.md
-│   │
-│   └── settings.json              # Framework configuration
+│   ├── settings.json              # Framework configuration
+│   └── COMMIT_POLICY.md           # Commit rules
 │
 ├── dev-docs/                      # Generated documentation
 │   ├── prd.md                     # Product requirements
@@ -127,41 +186,29 @@ project-root/
 └── CLAUDE.md                      # AI instruction router
 ```
 
-## Workflow Diagram
+## Security Layers
+
+The framework implements 6 layers of security:
 
 ```
-┌─────────────────────────────────────────────────────────────┐
-│                    PROJECT INITIATION                        │
-└─────────────────────────────────────────────────────────────┘
-                            │
-         ┌──────────────────┼──────────────────┐
-         ▼                  ▼                  ▼
-    ┌─────────┐        ┌─────────┐        ┌─────────┐
-    │  /prd   │───────▶│  /trd   │───────▶│ /to-do  │
-    │  (idea) │        │  (prd)  │        │(prd+trd)│
-    └─────────┘        └─────────┘        └─────────┘
-                                               │
-┌─────────────────────────────────────────────────────────────┐
-│                   DEVELOPMENT SESSION                        │
-└─────────────────────────────────────────────────────────────┘
-                            │
-    ┌───────────────────────┼───────────────────────┐
-    ▼                       ▼                       ▼
-┌─────────┐           ┌───────────┐           ┌─────────┐
-│ "start" │           │   WORK    │           │ "done"  │
-│         │           │           │           │         │
-│  Cold   │──────────▶│ /auto-dev │──────────▶│Complete │
-│  Start  │           │ /fix      │           │Protocol │
-│         │           │ /refactor │           │         │
-└─────────┘           │ /commit   │           └─────────┘
-                      └─────┬─────┘
-                            │
-                            ▼
-                    ┌─────────────┐
-                    │/codex-review│
-                    │ (MANDATORY) │
-                    └─────────────┘
+Layer 1: .gitignore           → Prevents tracking sensitive files
+Layer 2: COMMIT_POLICY.md     → Defines commit rules
+Layer 3: Pre-commit hook      → Blocks forbidden patterns
+Layer 4: /security-dialogs    → AI deep credential scan
+Layer 5: /codex-review        → Code quality validation
+Layer 6: /security            → OWASP security audit
 ```
+
+### Install Git Hooks
+
+```bash
+.claude/scripts/install-git-hooks.sh
+```
+
+This installs a pre-commit hook that:
+- Blocks `.env` files and credentials
+- Scans for hardcoded secrets
+- Enforces COMMIT_POLICY.md rules
 
 ## Key Concepts
 
@@ -179,6 +226,7 @@ The framework solves the "AI has no memory" problem:
 - `snapshot.md` tracks project state
 - Cold Start loads only necessary context (~3k tokens vs ~15-20k)
 - Completion Protocol saves state for next session
+- Crash recovery detects incomplete sessions
 
 ### Token Efficiency
 ```
@@ -188,6 +236,42 @@ Cold Start loads:
 └── Relevant PRD/TRD (~1500 tokens)
                      ─────────────
 Total:               ~3000 tokens
+```
+
+## Workflow Diagram
+
+```
+┌─────────────────────────────────────────────────────────────────┐
+│                    PROJECT INITIATION                            │
+└─────────────────────────────────────────────────────────────────┘
+                            │
+         ┌──────────────────┼──────────────────┐
+         ▼                  ▼                  ▼
+    ┌─────────┐        ┌─────────┐        ┌─────────┐
+    │  /prd   │───────▶│  /trd   │───────▶│ /to-do  │
+    │  (idea) │        │  (prd)  │        │(prd+trd)│
+    └─────────┘        └─────────┘        └─────────┘
+                                               │
+┌─────────────────────────────────────────────────────────────────┐
+│                   DEVELOPMENT SESSION                            │
+└─────────────────────────────────────────────────────────────────┘
+                            │
+    ┌───────────────────────┼───────────────────────┐
+    ▼                       ▼                       ▼
+┌─────────┐           ┌───────────┐           ┌─────────┐
+│ "start" │           │   WORK    │           │  /fi    │
+│         │           │           │           │         │
+│  Cold   │──────────▶│ /auto-dev │──────────▶│Complete │
+│  Start  │           │ /feature  │           │Protocol │
+│ +crash  │           │ /fix      │           │         │
+│ recovery│           │ /commit   │           └─────────┘
+└─────────┘           └─────┬─────┘
+                            │
+                            ▼
+                    ┌─────────────┐
+                    │/codex-review│
+                    │ (MANDATORY) │
+                    └─────────────┘
 ```
 
 ## Configuration

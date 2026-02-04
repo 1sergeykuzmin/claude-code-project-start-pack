@@ -9,6 +9,63 @@ Efficiently restore project context when resuming work after a break, minimizing
 
 ## Execution Steps
 
+### Step 0: Crash Recovery Check
+
+Check for crashed previous session:
+
+```
+Read .claude/.last_session (if exists):
+{
+  "status": "active" | "clean",
+  "timestamp": "ISO-8601",
+  "lastTask": "task description",
+  "uncommittedChanges": true | false
+}
+```
+
+**If status is "active"** (previous session didn't complete properly):
+
+```
+⚠️ Previous session did not complete cleanly.
+
+Last activity: [timestamp]
+Last task: [lastTask]
+Uncommitted changes: [yes/no]
+
+Options:
+1. Review and recover uncommitted work
+2. Start fresh (changes preserved in git)
+3. Show what happened
+```
+
+**If uncommitted changes exist:**
+```bash
+git status
+git diff --stat
+```
+
+Offer to:
+- Commit the pending changes
+- Stash for later
+- Review before deciding
+
+**If status is "clean" or file doesn't exist:**
+→ Proceed to Step 1
+
+### Step 0.5: Mark Session Active
+
+Create/update `.claude/.last_session`:
+```json
+{
+  "status": "active",
+  "timestamp": "[current ISO-8601]",
+  "lastTask": null,
+  "uncommittedChanges": false
+}
+```
+
+This enables crash detection for the current session.
+
 ### Step 1: Load Project State
 
 Read minimal context files in order:
