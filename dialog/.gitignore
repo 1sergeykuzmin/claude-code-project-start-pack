@@ -1,0 +1,14 @@
+# Dialog Export Directory
+# This directory contains exported development conversations
+# These files are automatically ignored to protect privacy
+
+# Ignore all dialog exports
+*.md
+*.json
+*.txt
+
+# But keep this .gitignore
+!.gitignore
+
+# Keep README if present
+!README.md
