@@ -89,13 +89,18 @@ git commit -m "feat: Add user authentication..."
 └─────────────────────────────────────────┘
 ```
 
-### Step 6: Mark Session Clean
+### Step 6: Mark Session Completed
 
 Update `.claude/.last_session`:
 ```json
 {
-  "status": "clean",
-  "timestamp": "2026-02-04T11:30:00Z"
+  "status": "completed",
+  "task": "Session completed successfully",
+  "timestamp": "2026-02-04T11:30:00Z",
+  "pid": null,
+  "metadata": {
+    "completed_at": "2026-02-04T11:30:00Z"
+  }
 }
 ```
 

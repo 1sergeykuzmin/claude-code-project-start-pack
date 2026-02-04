@@ -16,10 +16,10 @@ Check for crashed previous session:
 ```
 Read .claude/.last_session (if exists):
 {
-  "status": "active" | "clean",
+  "status": "active" | "completed",
+  "task": "task description",
   "timestamp": "ISO-8601",
-  "lastTask": "task description",
-  "uncommittedChanges": true | false
+  "pid": null
 }
 ```
 
@@ -29,8 +29,8 @@ Read .claude/.last_session (if exists):
 ⚠️ Previous session did not complete cleanly.
 
 Last activity: [timestamp]
-Last task: [lastTask]
-Uncommitted changes: [yes/no]
+Last task: [task]
+Uncommitted changes: [check via git status]
 
 Options:
 1. Review and recover uncommitted work
@@ -49,7 +49,7 @@ Offer to:
 - Stash for later
 - Review before deciding
 
-**If status is "clean" or file doesn't exist:**
+**If status is "completed" or file doesn't exist:**
 → Proceed to Step 1
 
 ### Step 0.5: Mark Session Active
@@ -58,9 +58,9 @@ Create/update `.claude/.last_session`:
 ```json
 {
   "status": "active",
+  "task": "Cold start initiated",
   "timestamp": "[current ISO-8601]",
-  "lastTask": null,
-  "uncommittedChanges": false
+  "pid": null
 }
 ```
 

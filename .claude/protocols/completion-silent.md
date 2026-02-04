@@ -18,7 +18,7 @@ This protocol completes sessions with minimal output:
 ### Step 1: Invoke Python Core
 
 ```bash
-python3 src/framework-core/main.py completion --silent
+python3 src/framework-core/main.py --silent completion
 ```
 
 ### Step 2: Parallel Tasks (3 total)
@@ -44,10 +44,22 @@ Update without output:
 
 #### 3b. Run Code Review (MANDATORY)
 
-```bash
-# /codex-review runs silently
-# Output only if review FAILS
+> **Architecture Note:** The Python framework checks if review is needed and
+> reports file counts. Claude then executes the actual `/codex-review` skill.
+> This separation allows Python to handle fast parallel checks while Claude
+> performs intelligent code analysis.
+
+Python returns:
+```json
+{
+  "files_to_review": 5,
+  "status": "review_required",
+  "note": "Claude must run /codex-review skill for actual review"
+}
 ```
+
+Claude then runs `/codex-review` silently:
+- Output only if review FAILS
 
 **If review passes:**
 ```
@@ -95,15 +107,18 @@ Just the commit hash. Nothing else.
 Remove with: git reset HEAD .env
 ```
 
-#### 3d. Mark Session Clean
+#### 3d. Mark Session Completed
 
 Update `.claude/.last_session`:
 ```json
 {
-  "status": "clean",
+  "status": "completed",
+  "task": "Implemented user authentication",
   "timestamp": "2026-02-04T11:30:00Z",
-  "lastTask": "Implemented user authentication",
-  "uncommittedChanges": false
+  "pid": null,
+  "metadata": {
+    "completed_at": "2026-02-04T11:30:00Z"
+  }
 }
 ```
 

@@ -18,7 +18,7 @@ This protocol produces **zero output on success**. Output appears only when:
 ### Step 1: Invoke Python Core
 
 ```bash
-python3 src/framework-core/main.py cold-start --silent
+python3 src/framework-core/main.py --silent cold-start
 ```
 
 **If Python unavailable:**
@@ -88,10 +88,9 @@ Create `.claude/.last_session`:
 ```json
 {
   "status": "active",
+  "task": "Cold start initiated",
   "timestamp": "2026-02-04T10:30:00Z",
-  "lastTask": null,
-  "uncommittedChanges": false,
-  "preset": "silent"
+  "pid": null
 }
 ```
 

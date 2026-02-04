@@ -59,6 +59,9 @@ def run_cold_start(
     if not skip_security:
         task_definitions.append(TaskDefinition("security_cleanup", task_security_cleanup))
 
+    # Add dialog export check
+    task_definitions.append(TaskDefinition("dialog_export", task_dialog_export))
+
     # Add session activation (always last conceptually, but runs in parallel)
     task_definitions.append(TaskDefinition("session_activate", task_session_activate))
 
@@ -348,6 +351,46 @@ def task_context_load() -> TaskResult:
 
     except Exception as e:
         return TaskResult.create_error("context_load", str(e))
+
+
+def task_dialog_export() -> TaskResult:
+    """Check for pending dialog exports."""
+    try:
+        from pathlib import Path
+
+        dialog_dir = Path("dialog")
+        claude_sessions = Path.home() / ".claude" / "projects"
+
+        # Check if dialog directory exists
+        if not dialog_dir.exists():
+            dialog_dir.mkdir(exist_ok=True)
+
+        # Count existing exports
+        existing_exports = list(dialog_dir.glob("*.md"))
+
+        # Check for pending exports (sessions not yet exported)
+        pending_exports = 0
+        if claude_sessions.exists():
+            # Look for session files that might need export
+            session_files = list(claude_sessions.glob("**/*.jsonl"))
+            # Simple heuristic: if more session files than exports, some may be pending
+            pending_exports = max(0, len(session_files) - len(existing_exports))
+
+        return TaskResult.create_success(
+            "dialog_export",
+            data={
+                "exported_count": len(existing_exports),
+                "pending_count": pending_exports,
+                "directory": str(dialog_dir)
+            }
+        )
+
+    except Exception as e:
+        # Dialog export check is non-critical
+        return TaskResult.create_success(
+            "dialog_export",
+            data={"status": "skipped", "reason": str(e)}
+        )
 
 
 def task_session_activate() -> TaskResult:

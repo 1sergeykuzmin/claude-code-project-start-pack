@@ -258,7 +258,24 @@ def task_update_metafiles() -> TaskResult:
 
 
 def task_codex_review() -> TaskResult:
-    """Run code review (MANDATORY unless explicitly skipped)."""
+    """
+    Check if code review is needed (MANDATORY unless explicitly skipped).
+
+    IMPORTANT: This task does NOT execute the actual code review.
+    It only checks if there are changes that need review and reports
+    the file count. The actual review must be performed by Claude
+    using the /codex-review skill after this check completes.
+
+    The Python framework provides:
+    - Fast parallel task execution
+    - File counting and status checks
+    - JSON results for Claude to process
+
+    Claude provides:
+    - Actual code analysis via /codex-review skill
+    - Review findings and recommendations
+    - User interaction for review results
+    """
     try:
         # Check if there are changes to review
         status = get_status()
@@ -266,16 +283,19 @@ def task_codex_review() -> TaskResult:
         if not status["staged"] and not status["unstaged"]:
             return TaskResult.create_skipped("codex_review", "No changes to review")
 
-        # Note: Actual codex review would invoke the review tool
-        # This is a placeholder that simulates the review
+        # Count files that need review
+        # Actual review is performed by Claude using /codex-review skill
+        files_to_review = len(status["staged"]) + len(status["unstaged"])
 
-        review_result = {
-            "files_reviewed": len(status["staged"]) + len(status["unstaged"]),
-            "issues_found": 0,
-            "status": "passed"
+        review_check = {
+            "files_to_review": files_to_review,
+            "staged_files": status["staged"],
+            "unstaged_files": status["unstaged"],
+            "status": "review_required",
+            "note": "Claude must run /codex-review skill for actual review"
         }
 
-        return TaskResult.create_success("codex_review", data=review_result)
+        return TaskResult.create_success("codex_review", data=review_check)
 
     except Exception as e:
         return TaskResult.create_error("codex_review", str(e))

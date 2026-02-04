@@ -103,12 +103,12 @@ Override priority:
 For silent and optimized modes, Python core provides execution:
 
 ```bash
-# Silent mode
-python3 src/framework-core/main.py cold-start --silent
-python3 src/framework-core/main.py completion --silent
+# Silent mode (global flags must come BEFORE subcommand)
+python3 src/framework-core/main.py --silent cold-start
+python3 src/framework-core/main.py --silent completion
 
 # Optimized mode (uses Python for speed, Claude for output)
-python3 src/framework-core/main.py cold-start --json
+python3 src/framework-core/main.py --json cold-start
 # Parse JSON, format optimized output
 ```
 

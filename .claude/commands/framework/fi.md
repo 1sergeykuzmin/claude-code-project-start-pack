@@ -47,15 +47,18 @@ If configured in settings:
 - Redacts credentials
 - Auto-adds to .gitignore
 
-### 5. Marks Session Clean
+### 5. Marks Session Completed
 
 Creates/updates `.claude/.last_session`:
 ```json
 {
-  "status": "clean",
+  "status": "completed",
+  "task": "Implement user authentication",
   "timestamp": "2024-01-15T10:30:00Z",
-  "lastTask": "Implement user authentication",
-  "uncommittedChanges": false
+  "pid": null,
+  "metadata": {
+    "completed_at": "2024-01-15T10:30:00Z"
+  }
 }
 ```
 
