@@ -1,4 +1,4 @@
-# Claude Code Project Framework v1.1
+# Claude Code Project Framework v2.0
 
 > AI Instruction Router - Auto-loaded by Claude Code
 
@@ -10,6 +10,14 @@ This framework provides a complete AI-assisted development lifecycle:
 Idea → PRD → TRD → Tasks → [Session: Start → Work → Review → Commit → End] → Ship
 ```
 
+## What's New in v2.0
+
+- **Preset System** - Choose behavior profile (paranoid, balanced, autopilot, verbose, silent)
+- **Silent Mode** - Zero output on success for flow-state optimization
+- **Parallel Execution** - Python core runs 10 tasks simultaneously
+- **Enhanced Auto-Triggers** - AI-based completion detection
+- **TypeScript Dialog Exporter** - Standalone tools for dialog management
+
 ## Quick Reference
 
 | Document | Path | Purpose |
@@ -20,15 +28,68 @@ Idea → PRD → TRD → Tasks → [Session: Start → Work → Review → Commi
 | Snapshot | `dev-docs/snapshot.md` | Current project state |
 | Architecture | `dev-docs/architecture.md` | Code structure |
 | Commit Policy | `.claude/COMMIT_POLICY.md` | What can/cannot be committed |
+| Presets | `.claude/presets.json` | Preset definitions |
+
+## Preset System
+
+Choose a preset to control framework behavior:
+
+| Preset | Output | Confirmations | Auto-Triggers | Best For |
+|--------|--------|---------------|---------------|----------|
+| **paranoid** | Full | All | Disabled | Sensitive projects |
+| **balanced** | Optimized | Single | Suggest | Daily development |
+| **autopilot** | Silent | Minimal | Execute | Personal projects |
+| **verbose** | Full | All | Suggest | Debugging (DEFAULT) |
+| **silent** | None | None | Execute | Flow state |
+
+### Set Preset
+
+In `.claude/settings.json`:
+```json
+{
+  "preset": "balanced"
+}
+```
+
+Or via command:
+```
+/apply-preset balanced
+```
+
+### Preset Behaviors
+
+| Behavior | paranoid | balanced | autopilot | verbose | silent |
+|----------|----------|----------|-----------|---------|--------|
+| Cold start | All steps | Summary | Nothing | All steps | Nothing |
+| Completion | All steps | Summary | Hash only | All steps | Hash only |
+| Commit | Confirm | Once | Auto | Confirm | Auto |
+| Push | Confirm | Once | Once | Confirm | Auto |
+| PR | Confirm | Confirm | Confirm | Confirm | Confirm |
+
+### Invariants (Cannot Override)
+
+These settings are locked regardless of preset:
+- `review.compulsory = true` - /codex-review is ALWAYS mandatory
+- `protocols.completion.requireReview = true` - Review before commit required
 
 ## Protocol Routing
 
-### Session Management
+Protocols are selected based on active preset:
+
+| Preset | Cold Start Protocol | Completion Protocol |
+|--------|---------------------|---------------------|
+| paranoid, verbose | `cold-start.md` | `completion.md` |
+| balanced | `cold-start-optimized.md` | `completion-optimized.md` |
+| autopilot, silent | `cold-start-silent.md` | `completion-silent.md` |
+
+### Session Triggers
 
 | Trigger | Action |
 |---------|--------|
 | `start`, `resume`, `continue`, `begin` | → Execute Cold Start Protocol |
 | `done`, `finish`, `/fi`, `end session` | → Execute Completion Protocol |
+
+## Commands
 
 ### Planning Skills
 
@@ -82,7 +143,7 @@ Idea → PRD → TRD → Tasks → [Session: Start → Work → Review → Commi
 
 | Command | Purpose |
 |---------|---------|
-| `/ui` | Browse exported dialogs |
+| `/ui` | Browse exported dialogs (localhost:3333) |
 | `/watch` | Auto-export dialogs in real-time |
 
 ### Framework Commands
@@ -90,6 +151,7 @@ Idea → PRD → TRD → Tasks → [Session: Start → Work → Review → Commi
 | Command | Purpose |
 |---------|---------|
 | `/fi` | Finish session (trigger Completion Protocol) |
+| `/apply-preset <name>` | Apply a preset configuration |
 | `/migrate-legacy` | Migrate existing project to framework |
 | `/upgrade-framework` | Update framework to latest version |
 | `/bug-reporting` | Manage error reporting settings |
@@ -107,6 +169,7 @@ Idea → PRD → TRD → Tasks → [Session: Start → Work → Review → Commi
 ### 1. Mandatory Code Review
 ```
 ⚠️ NEVER commit without running /codex-review first
+This rule applies to ALL presets, including silent and autopilot.
 ```
 
 ### 2. Document Updates
@@ -161,53 +224,6 @@ Idea → PRD → TRD → Tasks → [Session: Start → Work → Review → Commi
 5. /fi or "done"           → Completion Protocol
 ```
 
-### New Feature
-```
-1. /feature <description>  → Plan implementation
-2. Implement code          → Following the plan
-3. /codex-review           → Review changes
-4. /commit                 → Commit feature
-```
-
-### Quick Fix
-```
-1. /fix <issue>            → Debug and fix
-2. /codex-review           → Review fix
-3. /commit                 → Commit fix
-```
-
-### Security Audit
-```
-1. /security               → OWASP checklist audit
-2. /security-dialogs       → Deep credential scan
-3. Fix any findings        → Apply recommendations
-4. /codex-review           → Verify fixes
-```
-
-## Document Dependencies
-
-```
-                 ┌─────────┐
-                 │  /prd   │
-                 └────┬────┘
-                      │
-                      ▼
-                 ┌─────────┐
-                 │  /trd   │ ← reads prd.md
-                 └────┬────┘
-                      │
-                      ▼
-                 ┌─────────┐
-                 │ /to-do  │ ← reads prd.md + trd.md
-                 └────┬────┘
-                      │
-                      ▼
-              ┌──────────────┐
-              │ /autonomous- │ ← reads to-do.md + snapshot.md
-              │ development  │
-              └──────────────┘
-```
-
 ## Security Layers
 
 ```
@@ -233,14 +249,91 @@ If a session doesn't end cleanly (no `/fi` or "done"):
 - Offers to recover uncommitted work
 - Options: commit, stash, or review changes
 
+**Note:** In silent/autopilot mode, crash recovery is the one situation that always shows output.
+
 ## Configuration
 
+### settings.json
+
 Framework settings in `.claude/settings.json`:
-- Protocol behavior (cold-start, completion)
-- Review requirements
-- Security scanning options
-- Document paths
-- Dialog export settings
+
+```json
+{
+  "preset": "verbose",
+  "execution": {
+    "mode": "verbose",
+    "parallelism": true,
+    "pythonPath": "auto"
+  },
+  "autoUpdate": {
+    "enabled": true,
+    "confirmBeforeUpdate": true
+  },
+  "protocols": { ... },
+  "review": { ... },
+  "security": { ... }
+}
+```
+
+### .framework-config
+
+Runtime state in `.claude/.framework-config`:
+- Active preset
+- Python/Node detection status
+- Session statistics
+- Last update check
+
+## Requirements
+
+### Required
+- Python 3.8+ (for parallel execution)
+- Git 2.x
+- Claude Code CLI
+
+### Optional
+- Node.js 18+ (for TypeScript dialog exporter)
+
+## File Structure
+
+```
+.claude/
+├── commands/
+│   ├── code/       (feature, fix, refactor, explain, optimize)
+│   ├── git/        (commit, pr, release)
+│   ├── quality/    (review, security, security-dialogs, test)
+│   ├── db/         (migrate)
+│   ├── dialog/     (ui, watch)
+│   └── framework/  (fi, apply-preset, migrate-legacy, upgrade, bugs)
+├── protocols/
+│   ├── cold-start.md           (verbose)
+│   ├── cold-start-optimized.md (balanced)
+│   ├── cold-start-silent.md    (silent)
+│   ├── completion.md           (verbose)
+│   ├── completion-optimized.md (balanced)
+│   ├── completion-silent.md    (silent)
+│   ├── auto-triggers.md
+│   ├── apply-preset.md
+│   ├── settings-migration.md
+│   └── router.md
+├── analysis/       (architectural decision records)
+├── scripts/        (git hooks, utilities)
+├── skills/         (prd, trd, to-do, autonomous-dev, codex-review)
+├── settings.json
+├── settings.schema.json
+├── presets.json
+├── .framework-config
+└── COMMIT_POLICY.md
+```
+
+## Migration from v1.x
+
+v1.x settings are automatically migrated:
+1. Existing settings preserved
+2. New fields added with defaults
+3. Default preset: `verbose` (matches v1.x behavior)
+4. Backup created: `.claude/settings.json.v1.backup`
+
+No action required - migration happens on first cold start.
 
 ## Git Hooks
 
@@ -253,24 +346,6 @@ Provides:
 - Pre-commit hook blocking sensitive files
 - Pattern matching from COMMIT_POLICY.md
 
-## File Structure
-
-```
-.claude/
-├── commands/
-│   ├── code/       (feature, fix, refactor, explain, optimize)
-│   ├── git/        (commit, pr, release)
-│   ├── quality/    (review, security, security-dialogs, test)
-│   ├── db/         (migrate)
-│   ├── dialog/     (ui, watch)
-│   └── framework/  (fi, migrate-legacy, upgrade-framework, bug-reporting, analyze-bugs)
-├── protocols/      (cold-start, completion, auto-triggers)
-├── scripts/        (git hooks, utilities)
-├── skills/         (prd, trd, to-do, autonomous-dev, codex-review, best-practices)
-├── settings.json
-└── COMMIT_POLICY.md
-```
-
 ---
 
-*Framework: claude-code-project-start-pack v1.1*
+*Framework: claude-code-project-start-pack v2.0*

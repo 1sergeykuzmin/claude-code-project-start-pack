@@ -1,0 +1,23 @@
+# Claude Code Project Framework Core
+# Python 3.8+ required
+
+# No external dependencies required!
+# This framework uses only Python standard library:
+#
+# - concurrent.futures (parallel execution)
+# - dataclasses (structured results)
+# - json (configuration and output)
+# - pathlib (file operations)
+# - subprocess (git commands)
+# - typing (type hints)
+# - urllib.request (version checking)
+# - argparse (CLI)
+# - threading (thread-safe logging)
+
+# Optional dependency for version comparison
+packaging>=21.0
+
+# Development dependencies (optional)
+# pytest>=7.0.0
+# mypy>=1.0.0
+# black>=23.0.0

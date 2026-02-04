@@ -1,0 +1,232 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://github.com/1sergeykuzmin/claude-code-project-start-pack/migration-log.schema.json",
+  "title": "Migration Log Schema",
+  "description": "Schema for tracking framework migration state",
+  "type": "object",
+  "properties": {
+    "migration_id": {
+      "type": "string",
+      "format": "uuid",
+      "description": "Unique identifier for this migration"
+    },
+    "source_version": {
+      "type": "string",
+      "pattern": "^\\d+\\.\\d+\\.\\d+$",
+      "description": "Version migrating from"
+    },
+    "target_version": {
+      "type": "string",
+      "pattern": "^\\d+\\.\\d+\\.\\d+$",
+      "description": "Version migrating to"
+    },
+    "status": {
+      "type": "string",
+      "enum": ["in_progress", "paused", "completed", "rolled_back", "failed"],
+      "description": "Current migration status"
+    },
+    "current_step": {
+      "type": "integer",
+      "minimum": 0,
+      "description": "Current step number for crash recovery"
+    },
+    "started_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Migration start timestamp"
+    },
+    "updated_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Last update timestamp"
+    },
+    "completed_at": {
+      "type": ["string", "null"],
+      "format": "date-time",
+      "description": "Migration completion timestamp"
+    },
+    "conflicts": {
+      "type": "array",
+      "description": "List of detected conflicts",
+      "items": {
+        "type": "object",
+        "properties": {
+          "file": {
+            "type": "string",
+            "description": "Path to conflicting file"
+          },
+          "type": {
+            "type": "string",
+            "enum": ["both_modified", "deleted_by_them", "deleted_by_us", "added_by_both"],
+            "description": "Type of conflict"
+          },
+          "user_changes": {
+            "type": "string",
+            "description": "Description of user's changes"
+          },
+          "target_changes": {
+            "type": "string",
+            "description": "Description of target version changes"
+          },
+          "current_hash": {
+            "type": "string",
+            "description": "Hash of current file"
+          },
+          "target_hash": {
+            "type": "string",
+            "description": "Hash of target file"
+          },
+          "resolved": {
+            "type": "boolean",
+            "default": false,
+            "description": "Whether conflict has been resolved"
+          },
+          "resolution": {
+            "type": ["string", "null"],
+            "enum": ["keep_mine", "take_theirs", "merge", "skip", null],
+            "description": "How conflict was resolved"
+          },
+          "resolved_at": {
+            "type": ["string", "null"],
+            "format": "date-time",
+            "description": "When conflict was resolved"
+          }
+        },
+        "required": ["file", "type"]
+      }
+    },
+    "resolutions": {
+      "type": "array",
+      "description": "Summary of all resolutions",
+      "items": {
+        "type": "object",
+        "properties": {
+          "file": {
+            "type": "string"
+          },
+          "decision": {
+            "type": "string",
+            "enum": ["keep_mine", "take_theirs", "merge", "skip"]
+          },
+          "resolved_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "notes": {
+            "type": "string",
+            "description": "Additional notes about the resolution"
+          }
+        },
+        "required": ["file", "decision", "resolved_at"]
+      }
+    },
+    "backed_up_files": {
+      "type": "array",
+      "description": "Files backed up before migration",
+      "items": {
+        "type": "object",
+        "properties": {
+          "original_path": {
+            "type": "string",
+            "description": "Original file location"
+          },
+          "backup_path": {
+            "type": "string",
+            "description": "Backup file location"
+          },
+          "hash": {
+            "type": "string",
+            "description": "File hash for verification"
+          }
+        },
+        "required": ["original_path", "backup_path"]
+      }
+    },
+    "added_files": {
+      "type": "array",
+      "description": "New files added by migration",
+      "items": {
+        "type": "string"
+      }
+    },
+    "updated_files": {
+      "type": "array",
+      "description": "Existing files updated by migration",
+      "items": {
+        "type": "string"
+      }
+    },
+    "removed_files": {
+      "type": "array",
+      "description": "Files removed by migration",
+      "items": {
+        "type": "string"
+      }
+    },
+    "errors": {
+      "type": "array",
+      "description": "Errors encountered during migration",
+      "items": {
+        "type": "object",
+        "properties": {
+          "step": {
+            "type": "integer",
+            "description": "Step where error occurred"
+          },
+          "message": {
+            "type": "string",
+            "description": "Error message"
+          },
+          "timestamp": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "recoverable": {
+            "type": "boolean",
+            "description": "Whether migration can continue after this error"
+          }
+        },
+        "required": ["step", "message", "timestamp"]
+      }
+    },
+    "commit_hash": {
+      "type": ["string", "null"],
+      "description": "Git commit hash of migration commit"
+    },
+    "rollback_commit_hash": {
+      "type": ["string", "null"],
+      "description": "Git commit hash of rollback commit (if rolled back)"
+    },
+    "metadata": {
+      "type": "object",
+      "description": "Additional metadata",
+      "properties": {
+        "user_agent": {
+          "type": "string",
+          "description": "Tool/version that initiated migration"
+        },
+        "os": {
+          "type": "string",
+          "description": "Operating system"
+        },
+        "python_version": {
+          "type": "string",
+          "description": "Python version if available"
+        },
+        "node_version": {
+          "type": "string",
+          "description": "Node.js version if available"
+        }
+      }
+    }
+  },
+  "required": [
+    "migration_id",
+    "source_version",
+    "target_version",
+    "status",
+    "current_step",
+    "started_at",
+    "updated_at"
+  ]
+}

@@ -1,0 +1,39 @@
+{
+  "name": "claude-code-project-start-pack",
+  "version": "2.0.0",
+  "description": "Comprehensive framework for Claude Code projects with parallel execution and dialog export",
+  "private": true,
+  "scripts": {
+    "framework:cold-start": "python3 src/framework-core/main.py cold-start",
+    "framework:completion": "python3 src/framework-core/main.py completion",
+    "framework:status": "python3 src/framework-core/main.py status",
+    "framework:version": "python3 src/framework-core/main.py --version",
+    "dialog:export": "cd src/claude-export && npm run export",
+    "dialog:ui": "cd src/claude-export && npm run ui",
+    "dialog:watch": "cd src/claude-export && npm run watch",
+    "dialog:list": "cd src/claude-export && npm run list",
+    "dialog:install": "cd src/claude-export && npm install",
+    "security:scan": "./security/initial-scan.sh",
+    "security:check": "./security/check-triggers.sh",
+    "security:cleanup": "./security/cleanup-dialogs.sh",
+    "postinstall": "npm run dialog:install || true"
+  },
+  "keywords": [
+    "claude",
+    "claude-code",
+    "framework",
+    "project-management",
+    "dialog-export",
+    "prd",
+    "trd"
+  ],
+  "author": "Claude Code Project",
+  "license": "MIT",
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/user/claude-code-project-start-pack.git"
+  }
+}

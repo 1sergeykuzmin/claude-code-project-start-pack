@@ -2,8 +2,19 @@
   "$schema": "./settings.schema.json",
   "framework": {
     "name": "claude-code-project-start-pack",
-    "version": "1.0.0",
+    "version": "2.0.0",
     "description": "Combined architecture for AI-assisted development"
+  },
+  "preset": "verbose",
+  "execution": {
+    "mode": "verbose",
+    "parallelism": true,
+    "pythonPath": "auto"
+  },
+  "autoUpdate": {
+    "enabled": true,
+    "confirmBeforeUpdate": true,
+    "channel": "stable"
   },
   "protocols": {
     "coldStart": {
@@ -35,18 +46,22 @@
       "mode": "assisted",
       "linesChangedThreshold": 100,
       "filesChangedThreshold": 5,
-      "idleTimeMinutes": 30
+      "idleTimeMinutes": 30,
+      "completionConfidenceThreshold": 0.8,
+      "analyzeLastMessages": 10
     }
   },
   "review": {
     "compulsory": true,
     "tool": "/codex-review",
     "maxRetries": 3,
-    "autoFix": true
+    "autoFix": true,
+    "showInSilentMode": "failures_only"
   },
   "security": {
     "credentialScan": true,
     "preCommitCheck": true,
+    "runSecurityScripts": true,
     "blockedPatterns": [
       ".env",
       ".env.*",
@@ -74,11 +89,15 @@
     "conventionalCommits": true,
     "commitTypes": ["feat", "fix", "docs", "style", "refactor", "test", "chore"],
     "requireSignoff": false,
-    "coAuthor": "Claude <noreply@anthropic.com>"
+    "coAuthor": "Claude <noreply@anthropic.com>",
+    "autoPush": false,
+    "confirmPush": true
   },
   "dialog": {
     "exportPath": "dialog/",
     "autoGitignore": true,
-    "redactCredentials": true
+    "redactCredentials": true,
+    "format": "markdown",
+    "useTypeScriptExporter": true
   }
 }

@@ -1,0 +1,209 @@
+{
+  "$schema": "./presets.schema.json",
+  "version": "2.0.0",
+  "description": "Preset definitions for Claude Code Project Framework",
+
+  "presets": {
+    "paranoid": {
+      "name": "Paranoid",
+      "description": "Maximum safety. All confirmations enabled, verbose output, no automation.",
+      "recommended_for": "Sensitive projects, learning the framework, corporate environments",
+      "settings": {
+        "execution.mode": "verbose",
+        "autoUpdate.confirmBeforeUpdate": true,
+        "protocols.coldStart.autoDetect": true,
+        "protocols.completion.autoCommit": false,
+        "protocols.completion.requireReview": true,
+        "protocols.autoTriggers.mode": "manual",
+        "review.compulsory": true,
+        "review.showInSilentMode": "always",
+        "security.credentialScan": true,
+        "security.preCommitCheck": true,
+        "security.runSecurityScripts": true,
+        "git.autoPush": false,
+        "git.confirmPush": true
+      },
+      "behaviors": {
+        "cold_start_output": "full",
+        "completion_output": "full",
+        "commit_confirmation": "always",
+        "push_confirmation": "always",
+        "pr_confirmation": "always",
+        "auto_triggers": "disabled",
+        "auto_update": "confirm_always",
+        "security_warnings": "show_all"
+      }
+    },
+
+    "balanced": {
+      "name": "Balanced",
+      "description": "Recommended for daily development. Optimized output, single confirmations.",
+      "recommended_for": "Regular development, trusted codebases",
+      "settings": {
+        "execution.mode": "optimized",
+        "autoUpdate.confirmBeforeUpdate": false,
+        "protocols.coldStart.autoDetect": true,
+        "protocols.completion.autoCommit": false,
+        "protocols.completion.requireReview": true,
+        "protocols.autoTriggers.mode": "assisted",
+        "review.compulsory": true,
+        "review.showInSilentMode": "failures_only",
+        "security.credentialScan": true,
+        "security.preCommitCheck": true,
+        "security.runSecurityScripts": true,
+        "git.autoPush": false,
+        "git.confirmPush": true
+      },
+      "behaviors": {
+        "cold_start_output": "optimized",
+        "completion_output": "summary",
+        "commit_confirmation": "once",
+        "push_confirmation": "once",
+        "pr_confirmation": "always",
+        "auto_triggers": "suggest",
+        "auto_update": "auto_with_notice",
+        "security_warnings": "show_critical"
+      }
+    },
+
+    "autopilot": {
+      "name": "Autopilot",
+      "description": "Maximum automation. Minimal confirmations, auto-commit enabled.",
+      "recommended_for": "Personal projects, rapid prototyping, high-trust environments",
+      "settings": {
+        "execution.mode": "silent",
+        "autoUpdate.confirmBeforeUpdate": false,
+        "protocols.coldStart.autoDetect": true,
+        "protocols.completion.autoCommit": true,
+        "protocols.completion.requireReview": true,
+        "protocols.autoTriggers.mode": "proactive",
+        "review.compulsory": true,
+        "review.showInSilentMode": "failures_only",
+        "security.credentialScan": true,
+        "security.preCommitCheck": true,
+        "security.runSecurityScripts": true,
+        "git.autoPush": false,
+        "git.confirmPush": false
+      },
+      "behaviors": {
+        "cold_start_output": "silent",
+        "completion_output": "minimal",
+        "commit_confirmation": "never",
+        "push_confirmation": "once",
+        "pr_confirmation": "always",
+        "auto_triggers": "execute",
+        "auto_update": "auto_silent",
+        "security_warnings": "show_critical"
+      }
+    },
+
+    "verbose": {
+      "name": "Verbose",
+      "description": "Full visibility. Shows all progress and steps. Default for v1.x compatibility.",
+      "recommended_for": "Debugging, learning, transparency-first workflows",
+      "default": true,
+      "settings": {
+        "execution.mode": "verbose",
+        "autoUpdate.confirmBeforeUpdate": true,
+        "protocols.coldStart.autoDetect": true,
+        "protocols.completion.autoCommit": false,
+        "protocols.completion.requireReview": true,
+        "protocols.autoTriggers.mode": "assisted",
+        "review.compulsory": true,
+        "review.showInSilentMode": "always",
+        "security.credentialScan": true,
+        "security.preCommitCheck": true,
+        "security.runSecurityScripts": true,
+        "git.autoPush": false,
+        "git.confirmPush": true
+      },
+      "behaviors": {
+        "cold_start_output": "full",
+        "completion_output": "full",
+        "commit_confirmation": "always",
+        "push_confirmation": "always",
+        "pr_confirmation": "always",
+        "auto_triggers": "suggest",
+        "auto_update": "confirm_always",
+        "security_warnings": "show_all"
+      }
+    },
+
+    "silent": {
+      "name": "Silent",
+      "description": "Zero output on success. Shows only errors and required inputs.",
+      "recommended_for": "Experienced users, flow-state optimization, minimal interruption",
+      "settings": {
+        "execution.mode": "silent",
+        "autoUpdate.confirmBeforeUpdate": false,
+        "protocols.coldStart.autoDetect": true,
+        "protocols.completion.autoCommit": true,
+        "protocols.completion.requireReview": true,
+        "protocols.autoTriggers.mode": "proactive",
+        "review.compulsory": true,
+        "review.showInSilentMode": "failures_only",
+        "security.credentialScan": true,
+        "security.preCommitCheck": true,
+        "security.runSecurityScripts": true,
+        "git.autoPush": false,
+        "git.confirmPush": false
+      },
+      "behaviors": {
+        "cold_start_output": "silent",
+        "completion_output": "hash_only",
+        "commit_confirmation": "never",
+        "push_confirmation": "never",
+        "pr_confirmation": "always",
+        "auto_triggers": "execute",
+        "auto_update": "auto_silent",
+        "security_warnings": "show_critical"
+      }
+    }
+  },
+
+  "behavior_definitions": {
+    "cold_start_output": {
+      "full": "Show all initialization steps and loaded context",
+      "optimized": "Show key information only (project name, phase, next task)",
+      "silent": "No output unless error or crash recovery needed"
+    },
+    "completion_output": {
+      "full": "Show all steps: review, commit, snapshot update, summary",
+      "summary": "Show session summary only",
+      "minimal": "Show commit result only",
+      "hash_only": "Show only the commit hash (or nothing if no commit)"
+    },
+    "commit_confirmation": {
+      "always": "Ask before every commit",
+      "once": "Ask once per session, then auto-commit",
+      "never": "Never ask, auto-commit when ready"
+    },
+    "auto_triggers": {
+      "disabled": "Never auto-detect, wait for explicit commands",
+      "suggest": "Detect completion signals, suggest but don't execute",
+      "execute": "Detect and execute for explicit keywords, suggest for implicit"
+    },
+    "auto_update": {
+      "confirm_always": "Always ask before updates",
+      "auto_with_notice": "Auto-update but show what was updated",
+      "auto_silent": "Auto-update with no notification"
+    },
+    "security_warnings": {
+      "show_all": "Show all security warnings including low severity",
+      "show_critical": "Show only HIGH and CRITICAL severity warnings"
+    }
+  },
+
+  "invariants": {
+    "review.compulsory": {
+      "value": true,
+      "reason": "/codex-review is ALWAYS mandatory. This is a core framework principle and cannot be disabled by any preset.",
+      "override_allowed": false
+    },
+    "protocols.completion.requireReview": {
+      "value": true,
+      "reason": "Review before commit is always required.",
+      "override_allowed": false
+    }
+  }
+}

@@ -1,0 +1,349 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://github.com/1sergeykuzmin/claude-code-project-start-pack/settings.schema.json",
+  "title": "Claude Code Project Framework Settings",
+  "description": "Configuration schema for claude-code-project-start-pack v2.0",
+  "type": "object",
+  "properties": {
+    "$schema": {
+      "type": "string",
+      "description": "JSON Schema reference"
+    },
+    "framework": {
+      "type": "object",
+      "description": "Framework metadata",
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "Project name"
+        },
+        "version": {
+          "type": "string",
+          "pattern": "^\\d+\\.\\d+\\.\\d+$",
+          "description": "Framework version (semver)"
+        },
+        "description": {
+          "type": "string",
+          "description": "Project description"
+        }
+      },
+      "required": ["name", "version"]
+    },
+    "preset": {
+      "type": "string",
+      "enum": ["paranoid", "balanced", "autopilot", "verbose", "silent"],
+      "default": "verbose",
+      "description": "Active preset that controls default behaviors. Use 'verbose' for backward compatibility with v1.x"
+    },
+    "execution": {
+      "type": "object",
+      "description": "Execution mode settings",
+      "properties": {
+        "mode": {
+          "type": "string",
+          "enum": ["verbose", "optimized", "silent"],
+          "default": "verbose",
+          "description": "Protocol output verbosity"
+        },
+        "parallelism": {
+          "type": "boolean",
+          "default": true,
+          "description": "Enable parallel task execution via Python core"
+        },
+        "pythonPath": {
+          "type": "string",
+          "default": "auto",
+          "description": "Path to Python 3.8+ executable, or 'auto' for auto-detection"
+        }
+      }
+    },
+    "autoUpdate": {
+      "type": "object",
+      "description": "Automatic update settings",
+      "properties": {
+        "enabled": {
+          "type": "boolean",
+          "default": true,
+          "description": "Check for framework updates on cold start"
+        },
+        "confirmBeforeUpdate": {
+          "type": "boolean",
+          "default": true,
+          "description": "Ask before applying updates (false = auto-update)"
+        },
+        "channel": {
+          "type": "string",
+          "enum": ["stable", "beta"],
+          "default": "stable",
+          "description": "Update channel"
+        }
+      }
+    },
+    "protocols": {
+      "type": "object",
+      "description": "Protocol configuration",
+      "properties": {
+        "coldStart": {
+          "type": "object",
+          "properties": {
+            "enabled": {
+              "type": "boolean",
+              "default": true
+            },
+            "autoDetect": {
+              "type": "boolean",
+              "default": true,
+              "description": "Auto-detect session start triggers"
+            },
+            "triggers": {
+              "type": "array",
+              "items": { "type": "string" },
+              "default": ["start", "resume", "continue", "begin"],
+              "description": "Keywords that trigger cold start"
+            },
+            "maxContextTokens": {
+              "type": "integer",
+              "default": 3000,
+              "description": "Maximum tokens to load on start"
+            },
+            "loadOnStart": {
+              "type": "array",
+              "items": { "type": "string" },
+              "description": "Files to always load on cold start"
+            },
+            "loadOnDemand": {
+              "type": "array",
+              "items": { "type": "string" },
+              "description": "Files to load only when referenced"
+            }
+          }
+        },
+        "completion": {
+          "type": "object",
+          "properties": {
+            "enabled": {
+              "type": "boolean",
+              "default": true
+            },
+            "autoDetect": {
+              "type": "boolean",
+              "default": true,
+              "description": "Auto-detect session end triggers"
+            },
+            "triggers": {
+              "type": "array",
+              "items": { "type": "string" },
+              "default": ["done", "finish", "end session", "stop"],
+              "description": "Keywords that trigger completion"
+            },
+            "autoCommit": {
+              "type": "boolean",
+              "default": false,
+              "description": "Automatically commit without confirmation"
+            },
+            "requireReview": {
+              "type": "boolean",
+              "default": true,
+              "description": "Require /codex-review before commit (ALWAYS true for this framework)"
+            },
+            "exportDialog": {
+              "type": "boolean",
+              "default": true,
+              "description": "Export dialog on session end"
+            },
+            "updateSnapshot": {
+              "type": "boolean",
+              "default": true,
+              "description": "Update snapshot.md on session end"
+            }
+          }
+        },
+        "autoTriggers": {
+          "type": "object",
+          "properties": {
+            "enabled": {
+              "type": "boolean",
+              "default": true
+            },
+            "mode": {
+              "type": "string",
+              "enum": ["manual", "assisted", "proactive"],
+              "default": "assisted",
+              "description": "manual=never auto-detect, assisted=suggest only, proactive=auto-execute explicit"
+            },
+            "linesChangedThreshold": {
+              "type": "integer",
+              "default": 100,
+              "description": "Suggest commit after this many lines changed"
+            },
+            "filesChangedThreshold": {
+              "type": "integer",
+              "default": 5,
+              "description": "Suggest commit after this many files changed"
+            },
+            "idleTimeMinutes": {
+              "type": "integer",
+              "default": 30,
+              "description": "Suggest save after this many minutes idle"
+            },
+            "completionConfidenceThreshold": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1,
+              "default": 0.8,
+              "description": "AI completion detection confidence threshold"
+            },
+            "analyzeLastMessages": {
+              "type": "integer",
+              "default": 10,
+              "description": "Number of recent messages to analyze for completion signals"
+            }
+          }
+        }
+      }
+    },
+    "review": {
+      "type": "object",
+      "description": "Code review settings",
+      "properties": {
+        "compulsory": {
+          "type": "boolean",
+          "default": true,
+          "description": "MUST be true - /codex-review is mandatory before commits"
+        },
+        "tool": {
+          "type": "string",
+          "default": "/codex-review",
+          "description": "Review tool to use"
+        },
+        "maxRetries": {
+          "type": "integer",
+          "default": 3,
+          "description": "Maximum review retry attempts"
+        },
+        "autoFix": {
+          "type": "boolean",
+          "default": true,
+          "description": "Automatically fix review findings when possible"
+        },
+        "showInSilentMode": {
+          "type": "string",
+          "enum": ["always", "failures_only", "never"],
+          "default": "failures_only",
+          "description": "When to show review output in silent mode"
+        }
+      }
+    },
+    "security": {
+      "type": "object",
+      "description": "Security settings",
+      "properties": {
+        "credentialScan": {
+          "type": "boolean",
+          "default": true,
+          "description": "Scan for credentials before commits"
+        },
+        "preCommitCheck": {
+          "type": "boolean",
+          "default": true,
+          "description": "Run pre-commit hook checks"
+        },
+        "blockedPatterns": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "File patterns that should never be committed"
+        },
+        "allowedPatterns": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "Exceptions to blocked patterns"
+        },
+        "runSecurityScripts": {
+          "type": "boolean",
+          "default": true,
+          "description": "Run security/ shell scripts"
+        }
+      }
+    },
+    "documents": {
+      "type": "object",
+      "description": "Document paths (relative to project root)",
+      "properties": {
+        "prd": { "type": "string", "default": "dev-docs/prd.md" },
+        "trd": { "type": "string", "default": "dev-docs/trd.md" },
+        "todo": { "type": "string", "default": "dev-docs/to-do.md" },
+        "snapshot": { "type": "string", "default": "dev-docs/snapshot.md" },
+        "architecture": { "type": "string", "default": "dev-docs/architecture.md" },
+        "changelog": { "type": "string", "default": "dev-docs/changelog.md" }
+      }
+    },
+    "git": {
+      "type": "object",
+      "description": "Git settings",
+      "properties": {
+        "conventionalCommits": {
+          "type": "boolean",
+          "default": true,
+          "description": "Use conventional commit format"
+        },
+        "commitTypes": {
+          "type": "array",
+          "items": { "type": "string" },
+          "default": ["feat", "fix", "docs", "style", "refactor", "test", "chore"]
+        },
+        "requireSignoff": {
+          "type": "boolean",
+          "default": false,
+          "description": "Require commit sign-off"
+        },
+        "coAuthor": {
+          "type": "string",
+          "default": "Claude <noreply@anthropic.com>",
+          "description": "Co-author for AI-assisted commits"
+        },
+        "autoPush": {
+          "type": "boolean",
+          "default": false,
+          "description": "Automatically push after commit"
+        },
+        "confirmPush": {
+          "type": "boolean",
+          "default": true,
+          "description": "Confirm before pushing"
+        }
+      }
+    },
+    "dialog": {
+      "type": "object",
+      "description": "Dialog export settings",
+      "properties": {
+        "exportPath": {
+          "type": "string",
+          "default": "dialog/",
+          "description": "Directory for exported dialogs"
+        },
+        "autoGitignore": {
+          "type": "boolean",
+          "default": true,
+          "description": "Auto-add dialog path to .gitignore"
+        },
+        "redactCredentials": {
+          "type": "boolean",
+          "default": true,
+          "description": "Redact credentials from exports"
+        },
+        "format": {
+          "type": "string",
+          "enum": ["markdown", "html", "json"],
+          "default": "markdown"
+        },
+        "useTypeScriptExporter": {
+          "type": "boolean",
+          "default": true,
+          "description": "Use TypeScript exporter if available"
+        }
+      }
+    }
+  },
+  "required": ["framework"]
+}

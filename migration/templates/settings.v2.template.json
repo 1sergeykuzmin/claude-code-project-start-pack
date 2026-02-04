@@ -1,0 +1,62 @@
+{
+  "framework": {
+    "version": "2.0.0"
+  },
+  "preset": "verbose",
+  "execution": {
+    "mode": "verbose",
+    "parallelism": true,
+    "pythonPath": "auto"
+  },
+  "autoUpdate": {
+    "enabled": true,
+    "confirmBeforeUpdate": true
+  },
+  "protocols": {
+    "autoTriggers": {
+      "enabled": true,
+      "mode": "assisted",
+      "completionConfidenceThreshold": 0.8,
+      "analyzeLastMessages": 10,
+      "idleTimeThreshold": 300
+    }
+  },
+  "paths": {
+    "prd": "dev-docs/prd.md",
+    "trd": "dev-docs/trd.md",
+    "todo": "dev-docs/to-do.md",
+    "snapshot": "dev-docs/snapshot.md",
+    "architecture": "dev-docs/architecture.md"
+  },
+  "commit": {
+    "policy": ".claude/COMMIT_POLICY.md",
+    "requireReview": true,
+    "autoStage": false
+  },
+  "security": {
+    "credentialScan": true,
+    "preCommitCheck": true,
+    "runSecurityScripts": true,
+    "blockedPatterns": [
+      ".env",
+      "*.pem",
+      "*.key",
+      "credentials.json",
+      "secrets.yaml"
+    ],
+    "allowedPatterns": [
+      ".env.example",
+      ".env.template"
+    ]
+  },
+  "skills": {
+    "prd": { "enabled": true },
+    "trd": { "enabled": true },
+    "todo": { "enabled": true },
+    "autonomousDevelopment": { "enabled": true },
+    "codexReview": {
+      "enabled": true,
+      "compulsory": true
+    }
+  }
+}

@@ -1,6 +1,18 @@
 # Claude Code Project Start Pack
 
+[![Version](https://img.shields.io/badge/version-2.0.0-blue.svg)](CHANGELOG.md)
+[![Python](https://img.shields.io/badge/python-3.8+-green.svg)](https://python.org)
+[![License](https://img.shields.io/badge/license-MIT-brightgreen.svg)](LICENSE)
+
 A comprehensive framework for AI-assisted development with Claude Code. This starter pack provides structured workflows for the entire development lifecycle - from idea to production.
+
+## What's New in v2.0
+
+- **10x Faster Session Management** - Python-based parallel execution (10 tasks in ~350ms)
+- **Preset System** - 5 behavior presets for different workflows
+- **TypeScript Dialog Exporter** - Web UI for browsing conversations
+- **Enhanced Security** - 6-layer protection against credential leaks
+- **Silent Mode** - Minimal output for CI/CD integration
 
 ## Overview
 
@@ -58,6 +70,41 @@ This framework combines:
 /fi or "done"
 ```
 
+## Preset System
+
+The framework supports 5 behavior presets that control confirmation requirements, security scanning, and output verbosity:
+
+| Preset | Description | Use Case |
+|--------|-------------|----------|
+| `paranoid` | Maximum safety, requires confirmation for everything | Production deployments, security-critical work |
+| `balanced` | Default preset, smart confirmations | Normal development |
+| `autopilot` | Minimal confirmations, auto-commit | Rapid prototyping, trusted environments |
+| `verbose` | Extra logging and progress output | Debugging, learning |
+| `silent` | Minimal output, CI/CD optimized | Automated pipelines |
+
+### Setting Presets
+
+In `.claude/settings.json`:
+```json
+{
+  "preset": "balanced",
+  "presets": {
+    "balanced": {
+      "review_required": true,
+      "auto_commit": false,
+      "security_scan": "always",
+      "confirmation_level": "smart",
+      "output_verbosity": "normal"
+    }
+  }
+}
+```
+
+Or via CLI:
+```bash
+npm run framework:cold-start -- --preset autopilot
+```
+
 ## Features
 
 ### Planning Skills
@@ -75,6 +122,8 @@ This framework combines:
 | Cold Start | "start", "resume" | Load context, crash recovery |
 | Completion | "done", `/fi` | Save state, update snapshot |
 | Auto-triggers | Automatic | Detect session boundaries |
+
+**Performance:** Cold Start executes 10 parallel tasks in ~350ms using Python ThreadPoolExecutor.
 
 ### Execution Skills
 
@@ -120,7 +169,7 @@ This framework combines:
 
 | Command | Purpose |
 |---------|---------|
-| `/ui` | Browse exported dialogs |
+| `/ui` | Browse exported dialogs (localhost:3333) |
 | `/watch` | Auto-export in real-time |
 
 ### Framework Commands
@@ -174,6 +223,23 @@ project-root/
 │   ├── settings.json              # Framework configuration
 │   └── COMMIT_POLICY.md           # Commit rules
 │
+├── src/
+│   ├── framework-core/            # Python session management (v2.0)
+│   │   ├── commands/              # cold_start.py, completion.py
+│   │   ├── tasks/                 # config, git, hooks, security, session
+│   │   ├── utils/                 # parallel, result, logger
+│   │   └── main.py                # CLI entry point
+│   │
+│   └── claude-export/             # TypeScript dialog exporter (v2.0)
+│       ├── cli.ts                 # export, ui, watch commands
+│       ├── exporter.ts            # Session parsing + redaction
+│       ├── server.ts              # Express web viewer
+│       └── watcher.ts             # Real-time export
+│
+├── security/                      # Security scripts
+│   ├── check-triggers.sh          # Verify 6 security layers
+│   └── initial-scan.sh            # Quick credential scan
+│
 ├── dev-docs/                      # Generated documentation
 │   ├── prd.md                     # Product requirements
 │   ├── trd.md                     # Technical specification
@@ -183,7 +249,9 @@ project-root/
 │
 ├── dialog/                        # Conversation exports (gitignored)
 │
-└── CLAUDE.md                      # AI instruction router
+├── CLAUDE.md                      # AI instruction router
+├── CHANGELOG.md                   # Version history
+└── package.json                   # npm scripts
 ```
 
 ## Security Layers
@@ -197,6 +265,14 @@ Layer 3: Pre-commit hook      → Blocks forbidden patterns
 Layer 4: /security-dialogs    → AI deep credential scan
 Layer 5: /codex-review        → Code quality validation
 Layer 6: /security            → OWASP security audit
+```
+
+### Verify Security Configuration
+
+```bash
+npm run security:check
+# or directly:
+./security/check-triggers.sh
 ```
 
 ### Install Git Hooks
@@ -238,40 +314,19 @@ Cold Start loads:
 Total:               ~3000 tokens
 ```
 
-## Workflow Diagram
-
+### Parallel Execution (v2.0)
+The Python framework core executes tasks in parallel:
 ```
-┌─────────────────────────────────────────────────────────────────┐
-│                    PROJECT INITIATION                            │
-└─────────────────────────────────────────────────────────────────┘
-                            │
-         ┌──────────────────┼──────────────────┐
-         ▼                  ▼                  ▼
-    ┌─────────┐        ┌─────────┐        ┌─────────┐
-    │  /prd   │───────▶│  /trd   │───────▶│ /to-do  │
-    │  (idea) │        │  (prd)  │        │(prd+trd)│
-    └─────────┘        └─────────┘        └─────────┘
-                                               │
-┌─────────────────────────────────────────────────────────────────┐
-│                   DEVELOPMENT SESSION                            │
-└─────────────────────────────────────────────────────────────────┘
-                            │
-    ┌───────────────────────┼───────────────────────┐
-    ▼                       ▼                       ▼
-┌─────────┐           ┌───────────┐           ┌─────────┐
-│ "start" │           │   WORK    │           │  /fi    │
-│         │           │           │           │         │
-│  Cold   │──────────▶│ /auto-dev │──────────▶│Complete │
-│  Start  │           │ /feature  │           │Protocol │
-│ +crash  │           │ /fix      │           │         │
-│ recovery│           │ /commit   │           └─────────┘
-└─────────┘           └─────┬─────┘
-                            │
-                            ▼
-                    ┌─────────────┐
-                    │/codex-review│
-                    │ (MANDATORY) │
-                    └─────────────┘
+Cold Start (10 parallel tasks):
+├── migration_cleanup     ┐
+├── crash_detection       │
+├── config_init           │
+├── context_load          ├── All execute simultaneously
+├── git_hooks_install     │   in ~350ms total
+├── commit_policy_verify  │
+├── version_check         │
+├── security_cleanup      │
+└── session_activate      ┘
 ```
 
 ## Configuration
@@ -280,6 +335,8 @@ Edit `.claude/settings.json` to customize:
 
 ```json
 {
+  "preset": "balanced",
+  "silent_mode": false,
   "protocols": {
     "coldStart": { "enabled": true, "autoDetect": true },
     "completion": { "enabled": true, "exportDialog": true }
@@ -291,16 +348,97 @@ Edit `.claude/settings.json` to customize:
   "security": {
     "credentialScan": true,
     "preCommitCheck": true
+  },
+  "presets": {
+    "paranoid": {
+      "review_required": true,
+      "auto_commit": false,
+      "security_scan": "always",
+      "confirmation_level": "all"
+    },
+    "balanced": {
+      "review_required": true,
+      "auto_commit": false,
+      "security_scan": "always",
+      "confirmation_level": "smart"
+    },
+    "autopilot": {
+      "review_required": false,
+      "auto_commit": true,
+      "security_scan": "quick",
+      "confirmation_level": "none"
+    }
   }
 }
 ```
 
 ## Requirements
 
-- Claude Code CLI
-- Git
-- `tmux` and `codex` CLI (for code review)
-- Node.js (for most projects)
+### Required
+- **Claude Code CLI** - Latest version
+- **Python 3.8+** - For framework core
+- **Git** - Version control
+
+### Optional
+- **Node.js 18+** - For dialog exporter web UI
+- **tmux** and **codex** CLI - For code review
+
+## NPM Scripts
+
+```bash
+# Framework commands
+npm run framework:cold-start    # Start session
+npm run framework:completion    # End session
+
+# Dialog exporter
+npm run dialog:export           # Export conversations
+npm run dialog:ui               # Start web viewer (localhost:3333)
+
+# Security
+npm run security:scan           # Run credential scan
+npm run security:check          # Verify security layers
+```
+
+## Migration from v1.x
+
+If upgrading from v1.x:
+
+1. **Backup configuration**: Save `.claude/settings.json`
+2. **Update files**: Copy new `src/` directory
+3. **Merge settings**: Add `preset` and `presets` to settings.json
+4. **Test**: Run `npm run framework:cold-start`
+
+See [CHANGELOG.md](CHANGELOG.md) for detailed changes.
+
+## Troubleshooting
+
+### Cold Start Fails
+```bash
+# Check Python version
+python3 --version  # Should be 3.8+
+
+# Run with verbose output
+npm run framework:cold-start -- --verbose
+```
+
+### Security Scan False Positives
+The security scan may flag patterns in test files. Add exclusions to `.claude/settings.json`:
+```json
+{
+  "security": {
+    "excludePaths": ["**/*.test.ts", "**/fixtures/**"]
+  }
+}
+```
+
+### Dialog Exporter Not Starting
+```bash
+# Install dependencies
+cd src/claude-export && npm install
+
+# Then run
+npm run dialog:ui
+```
 
 ## Credits
 

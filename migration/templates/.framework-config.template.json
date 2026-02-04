@@ -1,0 +1,14 @@
+{
+  "project_id": "${PROJECT_ID}",
+  "framework_version": "${VERSION}",
+  "first_run_completed": false,
+  "consent_version": "2.0",
+  "last_update_check": "${TIMESTAMP}",
+  "active_preset": "${PRESET}",
+  "python_detected": true,
+  "node_detected": false,
+  "migration": {
+    "from_version": null,
+    "migrated_at": null
+  }
+}
