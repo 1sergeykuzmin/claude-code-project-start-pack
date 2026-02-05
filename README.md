@@ -1,530 +1,475 @@
-# Claude Code Project Start Pack
+🌐 **Language:** English | [Русский](README.ru.md)
 
-[![Version](https://img.shields.io/badge/version-2.0.0-blue.svg)](CHANGELOG.md)
+# Claude Code Project Framework
+
+**Go from idea to working code with one conversation.**
+
+```
+You: /prd A CLI tool that converts markdown to PDF
+     ↓
+Claude: Creates requirements, technical spec, tasks
+     ↓
+You: /autonomous-development
+     ↓
+Claude: Builds everything, reviews code, commits each step
+     ↓
+You: Working code with tests ✓
+```
+
+No more "AI forgot what we discussed." No more broken commits. No more managing the AI — let it manage the project.
+
+[![Version](https://img.shields.io/badge/version-2.0.1-blue.svg)](CHANGELOG.md)
 [![Python](https://img.shields.io/badge/python-3.8+-green.svg)](https://python.org)
 [![License](https://img.shields.io/badge/license-MIT-brightgreen.svg)](LICENSE)
 
-A comprehensive framework for AI-assisted development with Claude Code. This starter pack provides structured workflows for the entire development lifecycle - from idea to production.
+---
 
-## What's New in v2.0
+## Quick Start
 
-- **10x Faster Session Management** - Python-based parallel execution (10 tasks in ~350ms)
-- **Preset System** - 5 behavior presets for different workflows
-- **TypeScript Dialog Exporter** - Web UI for browsing conversations
-- **Enhanced Security** - 6-layer protection against credential leaks
-- **Silent Mode** - Minimal output for CI/CD integration
-- **One-Line Installer** - Install framework into any existing project
+**Install** (pick one):
+
+```bash
+# New project
+git clone https://github.com/1sergeykuzmin/claude-code-project-start-pack.git my-app
+cd my-app && rm -rf .git && git init
+
+# Existing project
+curl -fsSL https://raw.githubusercontent.com/1sergeykuzmin/claude-code-project-start-pack/main/install.sh | bash
+```
+
+**Try it:**
+
+```bash
+claude
+```
+
+```
+You: /prd A personal finance tracker
+
+Claude: I'll create a Product Requirements Document.
+        First, a few questions...
+```
+
+That's it. You're using the framework.
+
+---
+
+## The 5 Main Commands
+
+These commands form the core workflow:
+
+```
+/prd → /trd → /to-do → /autonomous-development
+                              ↓
+                        /codex-review (automatic)
+```
+
+---
+
+### `/prd` — Describe Your Idea
+
+Turns your idea into a structured Product Requirements Document.
+
+```
+You: /prd A mobile app for tracking daily water intake
+
+Claude: I'll help create a PRD. Let me ask a few questions:
+
+        1. Target platforms? (iOS, Android, web?)
+You: iOS and Android
+
+Claude: 2. Key features beyond basic tracking?
+You: Reminders, daily goals, weekly stats
+
+Claude: 3. Any integrations?
+You: Apple Health and Google Fit
+
+Claude: ✓ Created dev-docs/prd.md
+
+        Summary:
+        - 8 functional requirements defined
+        - 4 non-functional requirements
+        - 3 user personas identified
+        - Success metrics established
+```
+
+**What you get:** `dev-docs/prd.md` — a complete product spec you can share with stakeholders or use as the source of truth.
+
+---
+
+### `/trd` — Plan the Technical Approach
+
+Turns your PRD into a Technical Requirements Document.
+
+```
+You: /trd
+
+Claude: Analyzing PRD...
+
+        ✓ Created dev-docs/trd.md
+
+        Architecture decisions:
+        - Framework: React Native + Expo
+        - Database: SQLite (local) + optional cloud sync
+        - APIs: HealthKit, Google Fit
+        - Auth: Biometric + email fallback
+
+        Security review:
+        - Health data encryption: Required
+        - API key storage: Secure keychain
+        - Data retention: User-controlled
+```
+
+**What you get:** `dev-docs/trd.md` — technical blueprint with architecture, dependencies, and security considerations.
+
+---
+
+### `/to-do` — Break It Into Tasks
+
+Turns your TRD into a prioritized task list.
+
+```
+You: /to-do
+
+Claude: Breaking down the technical requirements...
+
+        ✓ Created dev-docs/to-do.md
+
+        Phase 1: Foundation (4 tasks)
+        - [ ] Initialize React Native project (TRD 2.1)
+        - [ ] Set up SQLite schema (TRD 3.1)
+        - [ ] Create navigation structure (TRD 2.2)
+        - [ ] Implement auth flow (TRD 4.1)
+
+        Phase 2: Core Features (5 tasks)
+        - [ ] Water logging screen (PRD FR-001)
+        - [ ] Daily goal system (PRD FR-002)
+        - [ ] Reminder notifications (PRD FR-003)
+        ...
+
+        12 tasks total across 3 phases
+```
+
+**What you get:** `dev-docs/to-do.md` — each task traces back to PRD/TRD sections, so you always know *why* something is being built.
+
+---
+
+### `/autonomous-development` — Build Everything
+
+Executes ALL tasks automatically in a continuous loop.
+
+```
+You: /autonomous-development
+
+Claude: Starting continuous execution...
+
+        ┌─────────────────────────────────────────────┐
+        │ LOOP: Find Task → Build → Review → Commit  │
+        │       ↑_______________________________↓     │
+        └─────────────────────────────────────────────┘
+
+        → Task 1/12: Initialize React Native project
+          Creating project structure...
+          Adding dependencies...
+          Running /codex-review... ✓ Passed
+          Committed: "feat: Initialize React Native with Expo"
+
+        → Task 2/12: Set up SQLite schema
+          Writing database models...
+          Running /codex-review... ⚠ Issue found
+          Auto-fixing: Added missing index
+          Running /codex-review... ✓ Passed
+          Committed: "feat: Add SQLite database schema"
+
+        → Task 3/12: Create navigation structure
+          ...
+
+        [Continues until ALL tasks complete]
+
+        ✓ All 12 tasks complete
+        ✓ 12 commits created
+        ✓ Ready for release
+```
+
+**Key behavior:**
+- Runs until ALL tasks are done (not just one)
+- Automatically runs code review after each task
+- Auto-fixes issues (up to 3 attempts)
+- Only stops when: all done, unfixable error, or you interrupt
+
+---
+
+### `/codex-review` — Quality Gate
+
+Validates code before every commit. Runs automatically during `/autonomous-development`, but you can also run it manually.
+
+```
+You: /codex-review
+
+Claude: Running code review...
+
+        Checking:
+        ✓ Syntax valid
+        ✓ No security vulnerabilities
+        ✓ No hardcoded secrets
+        ✓ Tests pass (14/14)
+        ⚠ Warning: Function 'processData' is 67 lines
+
+        Suggestion: Consider breaking into smaller functions.
+
+        Result: PASS (1 warning)
+```
+
+**This is mandatory.** Every task must pass review before commit — no exceptions, regardless of settings.
+
+---
+
+## Session Management
+
+The framework remembers where you left off.
+
+### Starting a Session
+
+```
+You: start
+
+Claude: Loading your project...
+
+        ✓ Context loaded (3,241 tokens)
+        ✓ Git status: clean
+        ✓ 4 tasks remaining in Phase 2
+
+        Ready to continue. Run /autonomous-development
+        or ask me anything about the project.
+```
+
+Other trigger words: `resume`, `continue`, `begin`
+
+### Ending a Session
+
+```
+You: done
+
+Claude: Wrapping up...
+
+        ✓ All changes committed
+        ✓ Snapshot updated
+        ✓ Session saved
+
+        Progress: 8/12 tasks complete
+        Next time: Phase 2, Task 5 (Reminder notifications)
+```
+
+Other trigger words: `finish`, `/fi`, `end session`
+
+### Why This Matters
+
+| Without Session Management | With Session Management |
+|---------------------------|------------------------|
+| Claude loads entire codebase (~15k tokens) | Loads smart summary (~3k tokens) |
+| No memory of previous work | Knows exactly where you left off |
+| Lost work if you forget to commit | Automatic crash recovery |
+
+### Crash Recovery
+
+Forgot to say `done`? No problem.
+
+```
+You: start
+
+Claude: ⚠ Found incomplete session from yesterday
+
+        Uncommitted changes:
+        - src/notifications.ts (new)
+        - src/api/health.ts (modified)
+
+        What would you like to do?
+        1. Commit and continue
+        2. Stash and start fresh
+        3. Review changes first
+
+You: 1
+
+Claude: ✓ Committed: "feat: Add notification system"
+        Continuing where you left off...
+```
+
+---
+
+## Other Useful Commands
+
+### Adding Features to Existing Code
+
+```
+You: /feature Add dark mode support
+
+Claude: I'll plan this feature. A few questions...
+        [Asks 2-3 clarifying questions]
+
+        ✓ Updated PRD with new requirements
+        ✓ Updated TRD with implementation approach
+        ✓ Added 4 tasks to to-do.md
+
+        Starting /autonomous-development...
+```
+
+### Quick Fixes
+
+| Command | What It Does |
+|---------|--------------|
+| `/fix "login not working"` | Debug and fix specific issues |
+| `/refactor auth.ts` | Improve code structure |
+| `/explain api/` | Understand how code works |
+| `/optimize utils.ts` | Performance improvements |
+| `/test users` | Write tests for a module |
+
+### Git Shortcuts
+
+| Command | What It Does |
+|---------|--------------|
+| `/commit` | Structured commit with proper message |
+| `/pr` | Create pull request |
+| `/release` | Bump version and tag |
+
+### Security
+
+| Command | What It Does |
+|---------|--------------|
+| `/security` | Run OWASP security audit |
+| `/security-dialogs` | Check for leaked credentials in conversations |
+
+### For Existing Projects
+
+```
+You: /migrate-legacy
+
+Claude: Analyzing your codebase...
+
+        ✓ Found: Next.js 14 app, 47 components, PostgreSQL
+        ✓ Generated dev-docs/prd.md (reverse-engineered)
+        ✓ Generated dev-docs/trd.md (architecture analysis)
+
+        Ready for /feature or /autonomous-development
+```
+
+---
+
+## Configuration
+
+### Presets
+
+Choose how much Claude confirms with you:
+
+| Preset | Behavior | Best For |
+|--------|----------|----------|
+| `balanced` | Confirms important actions | Daily work (default) |
+| `autopilot` | Minimal confirmations | Fast prototyping |
+| `paranoid` | Confirms everything | Production code |
+| `verbose` | Full output, all confirmations | Debugging |
+| `silent` | Minimal output | CI/CD pipelines |
+
+Set in `.claude/settings.json`:
+
+```json
+{
+  "preset": "balanced"
+}
+```
+
+**Note:** Code review is **always required** regardless of preset.
+
+### Key Files
+
+| File | Purpose |
+|------|---------|
+| `dev-docs/prd.md` | Product requirements |
+| `dev-docs/trd.md` | Technical specification |
+| `dev-docs/to-do.md` | Task breakdown |
+| `dev-docs/snapshot.md` | Current project state |
+| `.claude/settings.json` | Framework configuration |
+
+---
 
 ## Installation
 
 ### New Project
 
-Clone this repository as your project base:
-
 ```bash
 git clone https://github.com/1sergeykuzmin/claude-code-project-start-pack.git my-project
-cd my-project
-rm -rf .git && git init
+cd my-project && rm -rf .git && git init
 ```
 
 ### Existing Project
-
-Install the framework into any existing project with one command:
 
 ```bash
 curl -fsSL https://raw.githubusercontent.com/1sergeykuzmin/claude-code-project-start-pack/main/install.sh | bash
 ```
 
-Or download and run with options:
-
-```bash
-# Download installer
-curl -fsSL https://raw.githubusercontent.com/1sergeykuzmin/claude-code-project-start-pack/main/install.sh -o install.sh
-chmod +x install.sh
-
-# Preview what will be installed
-./install.sh --dry-run
-
-# Full installation
-./install.sh
-
-# Minimal installation (only .claude/ directory)
-./install.sh --minimal
-
-# Update existing installation
-./install.sh --update
-```
-
 ### Installer Options
 
-| Option | Description |
-|--------|-------------|
-| `--minimal` | Only install `.claude/` directory (no `src/`, `security/`) |
-| `--force` | Overwrite existing files without prompts |
-| `--no-hooks` | Skip git hooks installation |
-| `--update` | Update mode - refresh framework, preserve customizations |
-| `--dry-run` | Show what would be done without doing it |
+| Flag | Effect |
+|------|--------|
+| `--dry-run` | Preview without making changes |
+| `--minimal` | Only install `.claude/` folder |
+| `--update` | Refresh existing installation |
+| `--force` | Overwrite without prompts |
+| `--no-hooks` | Skip git hooks |
 
-## Overview
+### Requirements
 
-```
-Idea → PRD → TRD → Tasks → [Session: Start → Work → Review → Commit → End] → Ship
-```
+**Required:**
+- Claude Code CLI
+- Python 3.8+
+- Git
 
-This framework combines:
-- **Strategic Planning Skills** - Generate requirements, specifications, and task breakdowns
-- **Session Management** - Efficiently resume work with crash recovery
-- **Autonomous Development** - Execute tasks with mandatory code review
-- **Operational Commands** - Git workflows, debugging, refactoring, security audits
-- **Security Layers** - 6-layer protection against credential leaks
+**Optional:**
+- Node.js 18+ (for dialog web UI)
 
-## Quick Start
+---
 
-### 1. New Project Setup
-```bash
-# Generate product requirements
-/prd "A mobile app that helps users track their daily water intake"
+## Origins & Credits
 
-# Generate technical specification
-/trd
-
-# Generate task breakdown
-/to-do
-
-# Start autonomous development
-/autonomous-development
-```
-
-### 2. Existing Project Onboarding
-```bash
-# Migrate existing project to framework
-/migrate-legacy
-
-# Review generated documentation
-# Then start development
-/autonomous-development
-```
-
-### 3. Daily Development Session
-```bash
-# Resume work (loads context, checks for crashes)
-"start" or "resume"
-
-# Work on tasks
-/autonomous-development
-
-# Or use specific commands
-/feature "Add user authentication"
-/fix "Login redirect issue"
-
-# End session (saves state)
-/fi or "done"
-```
-
-## Preset System
-
-The framework supports 5 behavior presets that control confirmation requirements, security scanning, and output verbosity:
-
-| Preset | Description | Use Case |
-|--------|-------------|----------|
-| `paranoid` | Maximum safety, requires confirmation for everything | Production deployments, security-critical work |
-| `balanced` | Default preset, smart confirmations | Normal development |
-| `autopilot` | Minimal confirmations, auto-commit | Rapid prototyping, trusted environments |
-| `verbose` | Extra logging and progress output | Debugging, learning |
-| `silent` | Minimal output, CI/CD optimized | Automated pipelines |
-
-### Setting Presets
-
-In `.claude/settings.json`:
-```json
-{
-  "preset": "balanced",
-  "presets": {
-    "balanced": {
-      "review_required": true,
-      "auto_commit": false,
-      "security_scan": "always",
-      "confirmation_level": "smart",
-      "output_verbosity": "normal"
-    }
-  }
-}
-```
-
-Or via CLI:
-```bash
-npm run framework:cold-start -- --preset autopilot
-```
-
-## Features
+This framework combines two approaches to AI-assisted development:
 
 ### Planning Skills
 
-| Skill | Command | Output |
-|-------|---------|--------|
-| Product Requirements | `/prd <idea>` | `dev-docs/prd.md` |
-| Technical Specification | `/trd` | `dev-docs/trd.md` |
-| Task Breakdown | `/to-do` | `dev-docs/to-do.md` |
+The idea-to-execution pipeline:
 
-### Session Management
+| Skill | Purpose |
+|-------|---------|
+| `/prd` | Generate Product Requirements from ideas |
+| `/trd` | Generate Technical Specification from PRD |
+| `/to-do` | Break down into actionable tasks |
+| `/autonomous-development` | Execute all tasks in continuous loop |
+| `/codex-review` | Mandatory code review gate |
 
-| Protocol | Trigger | Purpose |
-|----------|---------|---------|
-| Cold Start | "start", "resume" | Load context, crash recovery |
-| Completion | "done", `/fi` | Save state, update snapshot |
-| Auto-triggers | Automatic | Detect session boundaries |
+### Starter Architecture
 
-**Performance:** Cold Start executes 10 parallel tasks in ~350ms using Python ThreadPoolExecutor.
+Session management and operational commands based on [claude-code-starter](https://github.com/alexeykrol/claude-code-starter) by [Alexey Krol](https://github.com/alexeykrol):
 
-### Execution Skills
+- Session protocols (Cold Start, Completion, crash recovery)
+- Operational commands (`/commit`, `/pr`, `/fix`, `/refactor`)
+- Document conventions (`snapshot.md`, `architecture.md`)
+- Security layers (pre-commit hooks, commit policies)
 
-| Skill | Command | Purpose |
-|-------|---------|---------|
-| Autonomous Dev | `/autonomous-development` | Execute ALL tasks in continuous loop |
-| Code Review | `/codex-review` | Validate changes (mandatory) |
-
-**Continuous Execution Loop:**
-```
-/autonomous-development
-    │
-    ├── Find first incomplete task
-    ├── Execute task
-    ├── Run /codex-review (mandatory)
-    ├── Auto-fix any findings (up to 3 retries)
-    ├── Commit on success
-    └── LOOP BACK immediately to next task
-        │
-        └── Stops ONLY when:
-            • All tasks complete
-            • Unfixable error after 3 retries
-            • User interrupts
-```
-
-### Code Commands
-
-| Command | Purpose |
-|---------|---------|
-| `/feature <desc>` | Plan feature, update PRD/TRD/to-do, auto-execute |
-| `/fix <issue>` | Debug and fix issues |
-| `/refactor [file]` | Improve code structure |
-| `/explain [file]` | Explain how code works |
-| `/optimize [file]` | Performance optimization |
-
-**Enhanced `/feature` Workflow (v2.0):**
-```
-/feature <description>
-    ├── Read PRD/TRD for context
-    ├── Ask up to 5 clarifying questions
-    ├── Update PRD with requirements
-    ├── Update TRD with tech approach + security review
-    ├── Add tasks to to-do.md
-    └── Auto-invoke /autonomous-development
-```
-
-### Quality Commands
-
-| Command | Purpose |
-|---------|---------|
-| `/review [file]` | Manual code review checklist |
-| `/security` | OWASP security audit |
-| `/security-dialogs` | AI credential deep scan |
-| `/test` | Write and run tests |
-
-### Git Commands
-
-| Command | Purpose |
-|---------|---------|
-| `/commit` | Structured git commits |
-| `/pr` | Create pull requests |
-| `/release` | Version management |
-
-### Database Commands
-
-| Command | Purpose |
-|---------|---------|
-| `/db:migrate` | Schema migrations |
-
-### Dialog Commands
-
-| Command | Purpose |
-|---------|---------|
-| `/ui` | Browse exported dialogs (localhost:3333) |
-| `/watch` | Auto-export in real-time |
-
-### Framework Commands
-
-| Command | Purpose |
-|---------|---------|
-| `/fi` | Finish session |
-| `/migrate-legacy` | Onboard existing projects |
-| `/upgrade-framework` | Update to latest version |
-| `/bug-reporting` | Manage error reporting |
-| `/analyze-bugs` | Analyze error patterns |
-
-### Best Practices
-
-| Skill | Command | Purpose |
-|-------|---------|---------|
-| React/Next.js | `/vercel-react-best-practices` | Performance optimization |
-| Web Design | `/web-design-guidelines` | Accessibility, UX compliance |
-
-## Directory Structure
+### The Combination
 
 ```
-project-root/
-├── .claude/
-│   ├── commands/                  # Operational commands
-│   │   ├── code/                  # feature, fix, refactor, explain, optimize
-│   │   ├── git/                   # commit, pr, release
-│   │   ├── quality/               # review, security, security-dialogs, test
-│   │   ├── db/                    # migrate
-│   │   ├── dialog/                # ui, watch
-│   │   └── framework/             # fi, migrate-legacy, upgrade, bug-reporting
-│   │
-│   ├── protocols/                 # Session management
-│   │   ├── cold-start.md          # Session init + crash recovery
-│   │   ├── completion.md          # Session finalization
-│   │   └── auto-triggers.md       # Automatic detection
-│   │
-│   ├── scripts/                   # Automation
-│   │   ├── pre-commit-hook.sh     # Block sensitive files
-│   │   └── install-git-hooks.sh   # Hook installer
-│   │
-│   ├── skills/                    # Strategic skills
-│   │   ├── prd/                   # Product requirements
-│   │   ├── trd/                   # Technical specification
-│   │   ├── to-do/                 # Task breakdown
-│   │   ├── autonomous-development/
-│   │   ├── codex-review/
-│   │   ├── vercel-react-best-practices/
-│   │   └── web-design-guidelines/
-│   │
-│   ├── settings.json              # Framework configuration
-│   └── COMMIT_POLICY.md           # Commit rules
-│
-├── src/
-│   ├── framework-core/            # Python session management (v2.0)
-│   │   ├── commands/              # cold_start.py, completion.py
-│   │   ├── tasks/                 # config, git, hooks, security, session
-│   │   ├── utils/                 # parallel, result, logger
-│   │   └── main.py                # CLI entry point
-│   │
-│   └── claude-export/             # TypeScript dialog exporter (v2.0)
-│       ├── cli.ts                 # export, ui, watch commands
-│       ├── exporter.ts            # Session parsing + redaction
-│       ├── server.ts              # Express web viewer
-│       └── watcher.ts             # Real-time export
-│
-├── security/                      # Security scripts
-│   ├── check-triggers.sh          # Verify 6 security layers
-│   └── initial-scan.sh            # Quick credential scan
-│
-├── dev-docs/                      # Generated documentation
-│   ├── prd.md                     # Product requirements
-│   ├── trd.md                     # Technical specification
-│   ├── to-do.md                   # Task breakdown
-│   ├── snapshot.md                # Project state (live)
-│   └── architecture.md            # Code structure (live)
-│
-├── dialog/                        # Conversation exports (gitignored)
-│
-├── CLAUDE.md                      # AI instruction router
-├── CHANGELOG.md                   # Version history
-└── package.json                   # npm scripts
+┌─────────────────────────────────────────────────────┐
+│         Claude Code Project Framework               │
+├─────────────────────────────────────────────────────┤
+│  PLANNING                                           │
+│  /prd → /trd → /to-do → /autonomous-development    │
+├─────────────────────────────────────────────────────┤
+│  SESSIONS (based on claude-code-starter)            │
+│  start → work → done (with crash recovery)          │
+├─────────────────────────────────────────────────────┤
+│  COMMANDS                                           │
+│  /commit, /pr, /fix, /refactor, /security           │
+└─────────────────────────────────────────────────────┘
 ```
 
-## Security Layers
-
-The framework implements 6 layers of security:
-
-```
-Layer 1: .gitignore           → Prevents tracking sensitive files
-Layer 2: COMMIT_POLICY.md     → Defines commit rules
-Layer 3: Pre-commit hook      → Blocks forbidden patterns
-Layer 4: /security-dialogs    → AI deep credential scan
-Layer 5: /codex-review        → Code quality validation
-Layer 6: /security            → OWASP security audit
-```
-
-### Verify Security Configuration
-
-```bash
-npm run security:check
-# or directly:
-./security/check-triggers.sh
-```
-
-### Install Git Hooks
-
-```bash
-.claude/scripts/install-git-hooks.sh
-```
-
-This installs a pre-commit hook that:
-- Blocks `.env` files and credentials
-- Scans for hardcoded secrets
-- Enforces COMMIT_POLICY.md rules
-
-## Key Concepts
-
-### Document Traceability
-Tasks in `to-do.md` reference PRD and TRD sections:
-```markdown
-- [ ] Implement user authentication (TRD 5.1, PRD FR-003)
-```
-
-### Mandatory Code Review
-Every task must pass `/codex-review` before commit. This is enforced by the autonomous development skill.
-
-### Session Continuity
-The framework solves the "AI has no memory" problem:
-- `snapshot.md` tracks project state
-- Cold Start loads only necessary context (~3k tokens vs ~15-20k)
-- Completion Protocol saves state for next session
-- Crash recovery detects incomplete sessions
-
-### Token Efficiency
-```
-Cold Start loads:
-├── snapshot.md      (~500 tokens)
-├── to-do.md         (~1000 tokens, incomplete only)
-└── Relevant PRD/TRD (~1500 tokens)
-                     ─────────────
-Total:               ~3000 tokens
-```
-
-### Parallel Execution (v2.0)
-The Python framework core executes tasks in parallel:
-```
-Cold Start (10 parallel tasks):
-├── migration_cleanup     ┐
-├── crash_detection       │
-├── config_init           │
-├── context_load          ├── All execute simultaneously
-├── git_hooks_install     │   in ~350ms total
-├── commit_policy_verify  │
-├── version_check         │
-├── security_cleanup      │
-└── session_activate      ┘
-```
-
-## Configuration
-
-Edit `.claude/settings.json` to customize:
-
-```json
-{
-  "preset": "balanced",
-  "silent_mode": false,
-  "protocols": {
-    "coldStart": { "enabled": true, "autoDetect": true },
-    "completion": { "enabled": true, "exportDialog": true }
-  },
-  "review": {
-    "compulsory": true,
-    "maxRetries": 3
-  },
-  "security": {
-    "credentialScan": true,
-    "preCommitCheck": true
-  },
-  "presets": {
-    "paranoid": {
-      "review_required": true,
-      "auto_commit": false,
-      "security_scan": "always",
-      "confirmation_level": "all"
-    },
-    "balanced": {
-      "review_required": true,
-      "auto_commit": false,
-      "security_scan": "always",
-      "confirmation_level": "smart"
-    },
-    "autopilot": {
-      "review_required": false,
-      "auto_commit": true,
-      "security_scan": "quick",
-      "confirmation_level": "none"
-    }
-  }
-}
-```
-
-## Requirements
-
-### Required
-- **Claude Code CLI** - Latest version
-- **Python 3.8+** - For framework core
-- **Git** - Version control
-
-### Optional
-- **Node.js 18+** - For dialog exporter web UI
-- **tmux** and **codex** CLI - For code review
-
-## NPM Scripts
-
-```bash
-# Framework commands
-npm run framework:cold-start    # Start session
-npm run framework:completion    # End session
-
-# Dialog exporter
-npm run dialog:export           # Export conversations
-npm run dialog:ui               # Start web viewer (localhost:3333)
-
-# Security
-npm run security:scan           # Run credential scan
-npm run security:check          # Verify security layers
-```
-
-## Migration from v1.x
-
-If upgrading from v1.x:
-
-1. **Backup configuration**: Save `.claude/settings.json`
-2. **Update files**: Copy new `src/` directory
-3. **Merge settings**: Add `preset` and `presets` to settings.json
-4. **Test**: Run `npm run framework:cold-start`
-
-See [CHANGELOG.md](CHANGELOG.md) for detailed changes.
-
-## Troubleshooting
-
-### Cold Start Fails
-```bash
-# Check Python version
-python3 --version  # Should be 3.8+
-
-# Run with verbose output
-npm run framework:cold-start -- --verbose
-```
-
-### Security Scan False Positives
-The security scan may flag patterns in test files. Add exclusions to `.claude/settings.json`:
-```json
-{
-  "security": {
-    "excludePaths": ["**/*.test.ts", "**/fixtures/**"]
-  }
-}
-```
-
-### Dialog Exporter Not Starting
-```bash
-# Install dependencies
-cd src/claude-export && npm install
-
-# Then run
-npm run dialog:ui
-```
-
-## Credits
-
-This framework combines concepts from:
-- Original planning skills (PRD, TRD, To-Do)
-- [claude-code-starter](https://github.com/alexeykrol/claude-code-starter) by Alexey Krol (session management, operational commands)
-- [Vercel Engineering](https://vercel.com) (React best practices)
+---
 
 ## License
 
