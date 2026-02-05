@@ -103,8 +103,23 @@ Protocols are selected based on active preset:
 
 | Command | Purpose |
 |---------|---------|
-| `/autonomous-development` | Execute tasks with mandatory review |
+| `/autonomous-development` | Execute ALL tasks in continuous loop until complete |
 | `/codex-review` | Run code review (COMPULSORY after each task) |
+
+**Autonomous Development Loop:**
+```
+┌──────────┐    ┌──────────┐    ┌──────────┐    ┌─────────┐
+│  Find    │───>│ Execute  │───>│  Review  │───>│ Commit  │──┐
+│  Task    │    │  Task    │    │  (codex) │    │         │  │
+└──────────┘    └──────────┘    └──────────┘    └─────────┘  │
+     ^                                                        │
+     └────────────────── LOOP IMMEDIATELY ────────────────────┘
+
+STOPS ONLY WHEN:
+• All tasks complete
+• Unfixable error after 3 retries
+• User interrupts
+```
 
 ### Code Commands
 

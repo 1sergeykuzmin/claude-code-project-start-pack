@@ -11,6 +11,53 @@ This skill automates the development workflow by reading tasks from the project 
 
 **CRITICAL RULE:** The `/codex-review` skill MUST be run after completing each task, before any commit. No task is considered complete without passing code review. This is non-negotiable.
 
+---
+
+## MANDATORY CONTINUOUS EXECUTION
+
+**THIS SKILL RUNS IN A CONTINUOUS LOOP. DO NOT STOP AFTER COMPLETING A TASK.**
+
+```
+┌─────────────────────────────────────────────────────────────────┐
+│                    EXECUTION LOOP (MANDATORY)                   │
+│                                                                 │
+│   ┌──────────┐    ┌──────────┐    ┌──────────┐    ┌─────────┐  │
+│   │  Find    │───>│ Execute  │───>│  Review  │───>│ Commit  │  │
+│   │  Task    │    │  Task    │    │  (codex) │    │         │  │
+│   └──────────┘    └──────────┘    └──────────┘    └────┬────┘  │
+│        ^                                               │       │
+│        │                                               │       │
+│        └───────────────────────────────────────────────┘       │
+│                    LOOP BACK IMMEDIATELY                        │
+│                                                                 │
+│   ONLY STOP WHEN:                                              │
+│   1. ALL tasks in to-do.md are complete [x]                    │
+│   2. Unfixable error after 3 retries                           │
+│   3. User explicitly interrupts                                │
+│                                                                 │
+│   DO NOT STOP FOR:                                             │
+│   - Completing a task (immediately find next)                  │
+│   - Updating documentation (continue after)                    │
+│   - End of a phase (continue to next phase)                    │
+│   - "Natural pause points" (no such thing exists)              │
+└─────────────────────────────────────────────────────────────────┘
+```
+
+**After EVERY successful commit, you MUST:**
+1. Immediately re-read `dev-docs/to-do.md`
+2. Find the next incomplete task `- [ ]`
+3. If found: Start executing it (NO summary, NO waiting, NO asking)
+4. If none found: Report "ALL TASKS COMPLETE" and stop
+
+**YOU ARE NOT ALLOWED TO:**
+- Stop to summarize progress mid-session
+- Ask the user if you should continue
+- Take a "natural break" between tasks
+- Report completion of individual tasks without continuing
+- Clear your todo list until ALL tasks are done
+
+---
+
 ## Integration with Session Protocols
 
 This skill integrates with the framework's session management:
@@ -369,13 +416,18 @@ Extract for each finding:
 3. Commit with the message
 4. Update task checkbox in tasks document:
    - Change `- [ ]` to `- [x]`
-5. Update dev-docs/snapshot.md:
+5. Update dev-docs/snapshot.md (BRIEF update only):
    - Set "Last Task" to the completed task
    - Set "Next Task" to the next pending task
-   - Update session history with task completion
-   - Note any key decisions made
-6. Move to next task (return to Step 1)
+   - Add one line to session history
+6. **IMMEDIATELY continue to next task - DO NOT STOP HERE**
+   - Do NOT summarize what you did
+   - Do NOT report progress to user
+   - Do NOT ask if you should continue
+   - GOTO Step 1 and find the next task
 ```
+
+**⚠️ CRITICAL: Step 6 is MANDATORY. You MUST loop back to Step 1 after every commit.**
 
 #### If Review has FIXABLE Findings:
 
@@ -442,19 +494,36 @@ Issues are unfixable when:
 5. Wait for user intervention
 ```
 
-### Step 6: Loop Continuation
+### Step 6: Loop Continuation (MANDATORY - NO EXCEPTIONS)
 
-After successful commit, check for more tasks:
+**This step is NOT optional. You MUST execute it after every commit.**
+
+After successful commit, IMMEDIATELY continue:
 
 ```
-1. Re-read the tasks document
-2. Find next unchecked task `- [ ]`
-3. If found: Return to Step 1
-4. If none found: Report completion
-   - List all tasks completed in this session
-   - Show summary of commits made
-   - Report any skipped/blocked tasks
+1. Re-read dev-docs/to-do.md (REQUIRED - do not skip)
+2. Scan for first unchecked task `- [ ]`
+3. If incomplete task found:
+   ┌────────────────────────────────────────────────────┐
+   │  IMMEDIATELY GOTO STEP 1 - START NEXT TASK        │
+   │  - Do NOT output a summary                        │
+   │  - Do NOT say "task complete, moving on"          │
+   │  - Do NOT ask user for confirmation               │
+   │  - Do NOT take any breaks                         │
+   │  - Just START the next task silently              │
+   └────────────────────────────────────────────────────┘
+4. If NO incomplete tasks remain:
+   - Output: "=== ALL TASKS COMPLETE ==="
+   - List total tasks completed this session
+   - Show final commit count
+   - Update snapshot.md with final state
+   - ONLY THEN may you stop
 ```
+
+**ENFORCEMENT:**
+- If you find yourself writing a summary after a commit → STOP and find next task instead
+- If you find yourself asking "should I continue?" → The answer is YES, continue immediately
+- If you completed a task and are about to end your response → You are violating this rule
 
 ## Commit Message Format
 
@@ -719,7 +788,18 @@ If needed, you can:
 - Parallel task execution is not supported
 - Always verify the working directory is the project root
 - Large tasks may need multiple review cycles
-- Keep the session running until natural completion or failure
+- **Keep executing tasks until ALL are complete or an error stops you**
+
+## Context Management
+
+If context window fills up during execution:
+- The session will be compacted automatically
+- On resume, immediately re-invoke `/autonomous-development`
+- The skill will detect where you left off via `snapshot.md`
+- Continue from the next incomplete task
+
+**Do NOT use context pressure as an excuse to stop early.**
+If you're worried about context, work faster and with less verbose output.
 
 **Complete Development Workflow:**
 ```

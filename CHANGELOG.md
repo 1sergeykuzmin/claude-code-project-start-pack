@@ -17,6 +17,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Backup creation before overwriting existing installations
 - Update mode to refresh framework while preserving customizations
 
+### Changed
+
+#### Autonomous Development - Continuous Loop Execution
+- `/autonomous-development` now runs in **mandatory continuous loop** until ALL tasks complete
+- Explicit anti-stopping rules: cannot pause to summarize, ask user, or take breaks
+- Only 3 valid stop conditions: all tasks done, unfixable error after 3 retries, user interrupt
+- After every commit, immediately finds and starts the next task
+- Added enforcement rules to prevent premature session termination
+- Context management guidance: context pressure is not a valid reason to stop
+
 ### Fixed
 - Removed `$schema` from settings.json (caused Claude Code validation errors)
 

@@ -180,8 +180,25 @@ npm run framework:cold-start -- --preset autopilot
 
 | Skill | Command | Purpose |
 |-------|---------|---------|
-| Autonomous Dev | `/autonomous-development` | Execute tasks sequentially |
+| Autonomous Dev | `/autonomous-development` | Execute ALL tasks in continuous loop |
 | Code Review | `/codex-review` | Validate changes (mandatory) |
+
+**Continuous Execution Loop:**
+```
+/autonomous-development
+    │
+    ├── Find first incomplete task
+    ├── Execute task
+    ├── Run /codex-review (mandatory)
+    ├── Auto-fix any findings (up to 3 retries)
+    ├── Commit on success
+    └── LOOP BACK immediately to next task
+        │
+        └── Stops ONLY when:
+            • All tasks complete
+            • Unfixable error after 3 retries
+            • User interrupts
+```
 
 ### Code Commands
 

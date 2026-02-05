@@ -11,7 +11,7 @@
 | Version | 2.0 |
 | Phase | Framework Complete |
 | Status | Active Development |
-| Last Task | Enhanced /feature command with orchestration workflow |
+| Last Task | Autonomous-development continuous loop + installer script |
 | Next Task | User testing and feedback |
 | Blockers | None |
 
@@ -19,6 +19,7 @@
 
 | Date | Duration | Tasks Completed | Commits | Notes |
 |------|----------|-----------------|---------|-------|
+| 2026-02-05 | ~2h | 3 | 3 | Installer script, continuous loop for autonomous-dev |
 | 2026-02-04 | ~4h | 8 | 2 | v2.0 release, architecture fixes, /feature enhancement |
 | 2026-02-04 | ~2h | 5 | 1 | Architecture inconsistency fixes |
 | Previous | - | - | - | v1.x to v2.0 integration (Phases 5-8) |
@@ -61,20 +62,30 @@
 
 ### Key Decisions This Sprint
 
-1. **Enhanced /feature command** - Now orchestrates full workflow:
+1. **Autonomous-development continuous loop** - Now runs until ALL tasks complete:
+   - Mandatory loop: Find task → Execute → Review → Commit → LOOP
+   - Only stops on: all tasks done, unfixable error (3 retries), user interrupt
+   - Anti-stopping rules prevent premature termination
+
+2. **Installer script** - One-line installation for existing projects:
+   - `curl -fsSL .../install.sh | bash`
+   - Options: --minimal, --force, --no-hooks, --update, --dry-run
+   - Intelligent CLAUDE.md merging
+
+4. **Enhanced /feature command** - Now orchestrates full workflow:
    - Reads PRD/TRD context
    - Asks up to 5 clarifying questions
    - Updates PRD, TRD, and to-do.md
    - Auto-invokes /autonomous-development
    - Security review always added to TRD
 
-2. **Architecture consistency fixes:**
+5. **Architecture consistency fixes:**
    - CLI argument order (global flags before subcommands)
    - Session status values aligned ("completed" not "clean")
    - Task count verified (10 parallel tasks)
    - Codex review separation documented
 
-3. **Schema validation:**
+6. **Schema validation:**
    - Created presets.schema.json for preset validation
    - All configuration now has JSON Schema
 
