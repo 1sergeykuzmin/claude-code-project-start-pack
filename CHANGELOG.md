@@ -9,6 +9,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+#### Documentation Redesign
+- **User-friendly README** restructured around user journey (not features)
+- Real command/response examples for all 5 main commands (`/prd`, `/trd`, `/to-do`, `/autonomous-development`, `/codex-review`)
+- Session management section with crash recovery examples
+- Proper credits section acknowledging planning skills and [claude-code-starter](https://github.com/alexeykrol/claude-code-starter) architecture
+- **Russian translation** (`README.ru.md`) with language switcher
+- Reduced time-to-first-example from line 84 to line 6
+
 #### Installer Script
 - **One-line installation** for existing projects: `curl -fsSL .../install.sh | bash`
 - Installation options: `--minimal`, `--force`, `--no-hooks`, `--update`, `--dry-run`
