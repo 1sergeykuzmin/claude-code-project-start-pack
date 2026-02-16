@@ -6,7 +6,7 @@
 
 ```
 Вы: /prd CLI-утилита для конвертации markdown в PDF
-     ↓
+     ↓  (или /prd --team для мульти-агентного режима)
 Claude: Создаёт требования, техническую спецификацию, задачи
      ↓
 Вы: /autonomous-development
@@ -18,7 +18,7 @@ Claude: Пишет код, проверяет качество, коммитит
 
 Больше никаких «Claude забыл, что мы обсуждали». Никаких сломанных коммитов. Не вы управляете ИИ — он управляет проектом.
 
-[![Version](https://img.shields.io/badge/version-2.0.1-blue.svg)](CHANGELOG.md)
+[![Version](https://img.shields.io/badge/version-2.1.0-blue.svg)](CHANGELOG.md)
 [![Python](https://img.shields.io/badge/python-3.8+-green.svg)](https://python.org)
 [![License](https://img.shields.io/badge/license-MIT-brightgreen.svg)](LICENSE)
 
@@ -95,6 +95,14 @@ Claude: ✓ Создан dev-docs/prd.md
 
 **Что вы получаете:** `dev-docs/prd.md` — полная спецификация продукта, которую можно показать стейкхолдерам или использовать как источник истины.
 
+Добавьте `--team` для мульти-перспективной генерации с AI-специалистами:
+
+```
+Вы: /prd --team Маркетплейс handmade товаров
+```
+
+Используются 3 core-агента (Product Strategist, UX Researcher, Tech Analyst) плюс до 3 автоматически подобранных доменных специалистов (SEO, Mobile, Enterprise и др.) с quality gates.
+
 ---
 
 ### `/trd` — Спланируйте техническую реализацию
@@ -122,6 +130,14 @@ Claude: Анализирую PRD...
 
 **Что вы получаете:** `dev-docs/trd.md` — технический план с архитектурой, dependencies и анализом безопасности.
 
+Добавьте `--team` для совместной работы архитектора и ревьюеров:
+
+```
+Вы: /trd --team
+```
+
+Lead-архитектор пишет полный TRD, ревьюеры валидируют каждый раздел, опциональные специалисты (Security, Database, Performance) проводят аудит своих доменов.
+
 ---
 
 ### `/to-do` — Разбейте на задачи
@@ -136,21 +152,24 @@ Claude: Разбиваю технические требования на зад
         ✓ Создан dev-docs/to-do.md
 
         Phase 1: Foundation (4 задачи)
-        - [ ] Инициализировать React Native project (TRD 2.1)
-        - [ ] Настроить SQLite schema (TRD 3.1)
-        - [ ] Создать navigation structure (TRD 2.2)
-        - [ ] Реализовать auth flow (TRD 4.1)
+        - [ ] T-001 Инициализировать React Native project [M] (TRD 2.1)
+        - [ ] T-002 Настроить SQLite schema [M] (TRD 3.1)
+        - [ ] T-003 Создать navigation structure [S] (TRD 2.2)
+        - [ ] T-004 Реализовать auth flow [L] (TRD 4.1, PRD FR-005)
 
         Phase 2: Core Features (5 задач)
-        - [ ] Экран логирования воды (PRD FR-001)
-        - [ ] Система дневных целей (PRD FR-002)
-        - [ ] Notifications (PRD FR-003)
+        - [ ] T-005 Экран логирования воды [M] (PRD FR-001)
+        - [ ] T-006 Система дневных целей [S] (PRD FR-002)
+        - [ ] T-007 Notifications [L] (PRD FR-003)
         ...
 
         Всего 12 задач в 3 фазах
+        Complexity: 3S / 5M / 3L / 1XL
 ```
 
-**Что вы получаете:** `dev-docs/to-do.md` — каждая задача связана с разделами PRD/TRD, так что всегда понятно *почему* что-то делается.
+**Что вы получаете:** `dev-docs/to-do.md` — каждая задача имеет стабильный ID, тег сложности и связана с разделами PRD/TRD. Задачи нарезаны вертикально по фичам, а не горизонтально по технологическим слоям.
+
+Добавьте `--team` для пары Decomposer + Validator, которая проверяет покрытие и качество. Добавьте `--update` для пере-генерации с сохранением существующих ID задач и статусов.
 
 ---
 
@@ -221,6 +240,22 @@ Claude: Запускаю code review...
 ```
 
 **Это обязательно.** Каждая задача должна пройти review перед commit — без исключений, независимо от настроек.
+
+---
+
+## Team Mode
+
+Добавьте `--team` к любой planning-команде для мульти-агентной генерации:
+
+| Команда | Модель команды | Агенты |
+|---------|---------------|--------|
+| `/prd --team` | Research + Debate | 3 core + до 3 специалистов |
+| `/trd --team` | Draft + Review | 1 архитектор + 1-2 ревьюера + специалисты |
+| `/to-do --team` | Decompose + Validate | 1 decomposer + 1 validator |
+
+Каждый агент привносит свою перспективу. Lead синтезирует всё в финальный документ с quality gates.
+
+Требуется: `CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS=1` в настройках (включено по умолчанию).
 
 ---
 

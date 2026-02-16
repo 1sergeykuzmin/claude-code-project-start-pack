@@ -1,7 +1,7 @@
 {
   "framework": {
     "name": "claude-code-project-start-pack",
-    "version": "2.0.0",
+    "version": "2.1.0",
     "description": "Combined architecture for AI-assisted development"
   },
   "preset": "verbose",
@@ -91,6 +91,9 @@
     "coAuthor": "Claude <noreply@anthropic.com>",
     "autoPush": false,
     "confirmPush": true
+  },
+  "env": {
+    "CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS": "1"
   },
   "dialog": {
     "exportPath": "dialog/",

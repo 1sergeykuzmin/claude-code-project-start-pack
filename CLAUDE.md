@@ -95,9 +95,9 @@ Protocols are selected based on active preset:
 
 | Command | Purpose |
 |---------|---------|
-| `/prd <idea>` | Generate Product Requirements Document |
-| `/trd` | Generate Technical Requirements Document |
-| `/to-do` | Generate task breakdown from PRD + TRD |
+| `/prd [--team] <idea>` | Generate Product Requirements Document |
+| `/trd [--team]` | Generate Technical Requirements Document |
+| `/to-do [--team] [--update]` | Generate task breakdown from PRD + TRD |
 
 ### Execution Skills
 
@@ -221,6 +221,8 @@ This rule applies to ALL presets, including silent and autopilot.
 2. /trd                    → Creates dev-docs/trd.md
 3. /to-do                  → Creates dev-docs/to-do.md
 4. /autonomous-development → Executes tasks
+
+Tip: Add --team to /prd, /trd, or /to-do for multi-agent generation.
 ```
 
 ### Existing Project Onboarding
@@ -372,4 +374,4 @@ Provides:
 
 ---
 
-*Framework: claude-code-project-start-pack v2.0*
+*Framework: claude-code-project-start-pack v2.1*

@@ -6,7 +6,7 @@
 
 ```
 You: /prd A CLI tool that converts markdown to PDF
-     ↓
+     ↓  (or /prd --team for multi-agent mode)
 Claude: Creates requirements, technical spec, tasks
      ↓
 You: /autonomous-development
@@ -18,7 +18,7 @@ You: Working code with tests ✓
 
 No more "AI forgot what we discussed." No more broken commits. No more managing the AI — let it manage the project.
 
-[![Version](https://img.shields.io/badge/version-2.0.1-blue.svg)](CHANGELOG.md)
+[![Version](https://img.shields.io/badge/version-2.1.0-blue.svg)](CHANGELOG.md)
 [![Python](https://img.shields.io/badge/python-3.8+-green.svg)](https://python.org)
 [![License](https://img.shields.io/badge/license-MIT-brightgreen.svg)](LICENSE)
 
@@ -95,6 +95,14 @@ Claude: ✓ Created dev-docs/prd.md
 
 **What you get:** `dev-docs/prd.md` — a complete product spec you can share with stakeholders or use as the source of truth.
 
+Add `--team` for multi-perspective generation with AI specialists:
+
+```
+You: /prd --team A marketplace for handmade goods
+```
+
+Uses 3 core agents (Product Strategist, UX Researcher, Tech Analyst) plus up to 3 auto-detected domain specialists (SEO, Mobile, Enterprise, etc.) with quality gates.
+
 ---
 
 ### `/trd` — Plan the Technical Approach
@@ -122,6 +130,14 @@ Claude: Analyzing PRD...
 
 **What you get:** `dev-docs/trd.md` — technical blueprint with architecture, dependencies, and security considerations.
 
+Add `--team` for architect + reviewer collaboration:
+
+```
+You: /trd --team
+```
+
+Lead architect drafts the full TRD, reviewers validate each section, and optional specialists (Security, Database, Performance) audit their domains.
+
 ---
 
 ### `/to-do` — Break It Into Tasks
@@ -136,21 +152,24 @@ Claude: Breaking down the technical requirements...
         ✓ Created dev-docs/to-do.md
 
         Phase 1: Foundation (4 tasks)
-        - [ ] Initialize React Native project (TRD 2.1)
-        - [ ] Set up SQLite schema (TRD 3.1)
-        - [ ] Create navigation structure (TRD 2.2)
-        - [ ] Implement auth flow (TRD 4.1)
+        - [ ] T-001 Initialize React Native project [M] (TRD 2.1)
+        - [ ] T-002 Set up SQLite schema [M] (TRD 3.1)
+        - [ ] T-003 Create navigation structure [S] (TRD 2.2)
+        - [ ] T-004 Implement auth flow [L] (TRD 4.1, PRD FR-005)
 
         Phase 2: Core Features (5 tasks)
-        - [ ] Water logging screen (PRD FR-001)
-        - [ ] Daily goal system (PRD FR-002)
-        - [ ] Reminder notifications (PRD FR-003)
+        - [ ] T-005 Water logging screen [M] (PRD FR-001)
+        - [ ] T-006 Daily goal system [S] (PRD FR-002)
+        - [ ] T-007 Reminder notifications [L] (PRD FR-003)
         ...
 
         12 tasks total across 3 phases
+        Complexity: 3S / 5M / 3L / 1XL
 ```
 
-**What you get:** `dev-docs/to-do.md` — each task traces back to PRD/TRD sections, so you always know *why* something is being built.
+**What you get:** `dev-docs/to-do.md` — each task has a stable ID, complexity tag, and traces back to PRD/TRD sections. Tasks are sliced vertically by feature, not horizontally by tech layer.
+
+Add `--team` for a Decomposer + Validator pair that reviews coverage and quality. Add `--update` to re-generate while preserving existing task IDs and completion statuses.
 
 ---
 
@@ -221,6 +240,22 @@ Claude: Running code review...
 ```
 
 **This is mandatory.** Every task must pass review before commit — no exceptions, regardless of settings.
+
+---
+
+## Team Mode
+
+Add `--team` to any planning command for multi-agent generation:
+
+| Command | Team Model | Agents |
+|---------|-----------|--------|
+| `/prd --team` | Research + Debate | 3 core + up to 3 specialists |
+| `/trd --team` | Draft + Review | 1 architect + 1-2 reviewers + specialists |
+| `/to-do --team` | Decompose + Validate | 1 decomposer + 1 validator |
+
+Each agent brings a different perspective. The lead synthesizes everything into the final document with quality gates.
+
+Requires: `CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS=1` in settings (enabled by default).
 
 ---
 

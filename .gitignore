@@ -90,3 +90,9 @@ INTEGRATION_PLAN.md
 
 # Ideation folder (internal brainstorming)
 ideation/
+
+# Analysis documents (internal design proposals)
+.claude/analysis/
+.prd-workspace/
+.trd-workspace/
+.todo-workspace/

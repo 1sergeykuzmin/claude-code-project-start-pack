@@ -5,6 +5,42 @@ All notable changes to the Claude Code Project Framework will be documented in t
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.1.0] - 2026-02-16
+
+### Added
+
+#### Planning Skills — Team Mode
+- **`/prd --team`** (v2.3.0): Multi-perspective PRD generation with Research + Debate model
+  - 3 core agents: Product Strategist, UX Researcher, Tech Analyst
+  - Up to 3 domain specialists auto-detected: SEO, Mobile, Enterprise, Designer, Business, Growth, AI
+  - Workspace persistence (`.prd-workspace/`) for intermediate artifacts
+  - 8 universal quality gates (QG-001 through QG-008) + specialist-specific gates
+  - Specialist contributions in standalone sections (12A/12B/12C)
+
+- **`/trd --team`** (v2.0.0): Multi-perspective TRD generation with Draft + Review model
+  - Lead Architect (Backend/Frontend/Infra variant) writes full TRD
+  - 1-2 role-specific Reviewers (Backend, Frontend, Infra/DevOps)
+  - 0-2 Specialists (Security Reviewer, Database Architect, Performance Engineer)
+  - Workspace persistence (`.trd-workspace/`) for draft and reviews
+  - 8 universal quality gates (TQG-001 through TQG-008) + 6 specialist gates
+  - Resolved Review Issues appendix documenting all fixes
+
+#### To-Do Skill — Major Upgrade (v2.0.0)
+- **`/to-do --team`**: Decompose + Validate model (lightest team: 2 agents)
+  - Decomposer generates full task breakdown
+  - Validator reviews for coverage, granularity, ordering, quality
+  - Lead performs revision with quality gates
+- **`/to-do --update`**: Incremental re-generation preserving task IDs and statuses
+- **Vertical feature slicing**: Replaces fixed 9-phase horizontal layering with adaptive phases grouped by domain/feature
+- **8 project archetypes**: Full-stack web app, Frontend-only SPA, API/Backend, CLI, Mobile, Data pipeline, Library/SDK, Serverless
+- **Task metadata**: Stable IDs (T-xxx), complexity tags ([S/M/L/XL]), acceptance criteria, dependency graph, file hints
+- **Expanded status model**: [ ] pending, [~] in-progress, [x] done, [!] blocked, [-] skipped
+- **8 quality gates** (TDQG-001 through TDQG-008): PRD/TRD coverage, scope creep, dependency validation, XL detection, phase balance
+
+### Changed
+- Agent teams enabled by default in settings.json (`CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS=1`)
+- `.gitignore` updated with workspace directories (`.prd-workspace/`, `.trd-workspace/`, `.todo-workspace/`)
+
 ## [2.0.1] - 2026-02-05
 
 ### Added
